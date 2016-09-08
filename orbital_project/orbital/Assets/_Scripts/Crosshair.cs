@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class Crosshair : MonoBehaviour {
 
+    public bool activated;
+
     public float moveSpeed;
     public float _MINMOVEDISTANCE;
     float minMoveDistance;
@@ -15,10 +17,11 @@ public class Crosshair : MonoBehaviour {
     public Material matBlack;
     public Material matGreen;
 
+    public bool topDown;
 
     Vector3 lastMousePosition;
 
-    public bool mouseDown { get; set; }
+    public bool mouseDown { get; set; }    
 
     void Awake() {
 
@@ -30,50 +33,89 @@ public class Crosshair : MonoBehaviour {
 
     void Start() {
 
-        var mousePos = Input.mousePosition;
-        mousePos.z = 1000.0f;
-        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-
-        transform.position = mousePos;
+        if (activated) {
+            activated = false;
+            activate();
+        }
+        else {
+            activated = true;
+            deactivate();
+        }
     }
 
     void Update() {
 
+        if (activated) {
+            if (Input.GetMouseButtonDown(0)) {
 
-        if (Input.GetMouseButtonDown(0)) {
+                GetComponentInChildren<MeshRenderer>().material = matGreen;
+                mouseDown = true;
+            }
+            if (Input.GetMouseButtonUp(0)) {
 
-            GetComponent<MeshRenderer>().material = matGreen;
-            mouseDown = true;
-        }
-        if (Input.GetMouseButtonUp(0)) {
-
-            GetComponent<MeshRenderer>().material = matBlack;
-            mouseDown = false;
+                GetComponentInChildren<MeshRenderer>().material = matBlack;
+                mouseDown = false;
+            }
         }
     }
 
     void FixedUpdate() {
 
-        var mousePos = Input.mousePosition;
-        mousePos.z = 1010.0f;
-        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        if (activated) {
 
-        if (Vector3.Distance(mousePos, lastMousePosition) > 12) {
-            minMoveDistance = _MINMOVEDISTANCE;            
+            var mousePos = Input.mousePosition;
+            mousePos.z = 1000.0f;         
+            
+            mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);            
+
+            if (Vector3.Distance(mousePos, lastMousePosition) > 12) {
+                minMoveDistance = _MINMOVEDISTANCE;
+            }
+            else {
+                if (minMoveDistance >= 10)
+                    minMoveDistance -= 1;
+            }
+
+
+            lastMousePosition = mousePos;
+
+            if (Vector3.Distance(mousePos, transform.position) > minMoveDistance) {
+
+                rigidbody.AddForce((mousePos - transform.position).normalized * moveSpeed);
+            }
+
+            if (!topDown) {
+
+                transform.rotation = Manager.rea.transform.rotation;
+            }
         }
-        else {
-            if (minMoveDistance >= 10)
-                minMoveDistance -= 1;            
+
+    }
+
+    public void activate() {
+
+        if (!activated) {
+
+            Manager.currentCrosshair = this;
+
+            activated = true;
+            GetComponentInChildren<MeshRenderer>().enabled = true;
+
+            var mousePos = Input.mousePosition;
+            mousePos.z = 1000.0f;
+            mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);    
+
+            transform.position = mousePos;
         }
+    }
 
+    public void deactivate() {
 
-        lastMousePosition = mousePos;
+        if (activated) {
 
-        if (Vector3.Distance(mousePos, transform.position) > minMoveDistance) {
-
-            rigidbody.AddForce((mousePos - transform.position).normalized * moveSpeed);
+            activated = false;
+            GetComponentInChildren<MeshRenderer>().enabled = false;
         }
-
     }
 
     public Material lineMaterial;

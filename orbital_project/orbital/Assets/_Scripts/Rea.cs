@@ -7,7 +7,8 @@ using System.Collections.Generic;
 public class Rea : MonoBehaviour {
 
 
-    public float turnSpeed = 1;
+    public float TDturnSpeed = 1;
+    public float FPturnSpeed = 1;
     public float moveSpeed = 1;
 
     public float moveDrag = 4;
@@ -18,7 +19,15 @@ public class Rea : MonoBehaviour {
     public Camera topDownCamera;
     public Camera FPCamera;
 
-    public bool FPMode { get; set; }
+    public GameObject TDCrosshair;
+    public GameObject FPCrosshair;
+
+    public bool FPMode { get; set; }    
+
+
+    //values for internal use
+    private Quaternion _lookRotation;
+    private Vector3 _direction;
 
     Quaternion rotationTowardsTarget;    
     new Rigidbody rigidbody;
@@ -27,11 +36,14 @@ public class Rea : MonoBehaviour {
     void Awake() {
 
         Manager.rea = this;
+        Manager.currentCamera = topDownCamera;
+        
         rigidbody = GetComponent<Rigidbody>();
-
     }
 
     void Update() {
+
+        Debug.DrawRay(transform.position, transform.forward * 1000, Color.black);
 
         mesh.transform.Rotate(new Vector3(0, 0.1f, 0));
 
@@ -42,41 +54,59 @@ public class Rea : MonoBehaviour {
 
     void FixedUpdate() {
 
-        if (!FPMode) {
-            if (crosshair.mouseDown) {
+        if (Manager.currentCrosshair.mouseDown) {
 
-                rigidbody.drag = moveDrag;
+            rigidbody.drag = moveDrag;
 
-                rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(crosshair.transform.position.y - transform.position.y, crosshair.transform.position.x - transform.position.x) * 180 / Mathf.PI - 90, transform.forward);
-                transform.rotation = Quaternion.Slerp(transform.rotation, rotationTowardsTarget, Time.deltaTime * turnSpeed);
-
-                rigidbody.AddForce(transform.up * moveSpeed);
-
+            if (!FPMode) {
+                rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(crosshair.transform.position.z - transform.position.z, crosshair.transform.position.x - transform.position.x) * 180 / Mathf.PI - 90, -transform.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);
             }
             else {
+                var targetVector = (Manager.currentCrosshair.transform.position - transform.position).normalized;
+                var rotationTarget = Quaternion.LookRotation(targetVector);
 
-                rigidbody.drag = 0;
+                transform.rotation = Quaternion.Slerp(transform.rotation, rotationTarget, Time.deltaTime * FPturnSpeed);
             }
+
+            rigidbody.AddForce(transform.forward * moveSpeed);
+
         }
         else {
 
+            rigidbody.drag = 0;                                
 
-        }
+        }                
     }
 
     void toggleMode() {
 
         if (FPMode) {
 
+            Manager.currentCamera = topDownCamera;
+
+            topDownCamera.transform.position = transform.position + (transform.up * 1000);
+            topDownCamera.transform.rotation = transform.rotation;
+            topDownCamera.transform.Rotate(new Vector3(90, 0, 0));
+
             FPMode = false;
             topDownCamera.enabled = true;
             FPCamera.enabled = false;
+
+            TDCrosshair.GetComponent<Crosshair>().activate();
+            FPCrosshair.GetComponent<Crosshair>().deactivate();
         }
         else {
+
+            Manager.currentCamera = FPCamera;
 
             FPMode = true;
             topDownCamera.enabled = false;
             FPCamera.enabled = true;
+
+            TDCrosshair.GetComponent<Crosshair>().deactivate();
+            FPCrosshair.GetComponent<Crosshair>().activate();
+
         }
     }
 }

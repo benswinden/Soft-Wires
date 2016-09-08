@@ -8,6 +8,11 @@ public class Manager : MonoBehaviour {
 
     public static Rea rea;
 
+    public static Camera currentCamera;
+
+    public static Crosshair currentCrosshair;
+
+
     void Awake() {
 
         Cursor.visible = false;

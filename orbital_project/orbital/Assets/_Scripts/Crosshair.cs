@@ -7,12 +7,16 @@ using System.Collections.Generic;
 public class Crosshair : MonoBehaviour {
 
     public float moveSpeed;
+    public float _MINMOVEDISTANCE;
+    float minMoveDistance;
 
     new Rigidbody rigidbody;
 
     public Material matBlack;
     public Material matGreen;
 
+
+    Vector3 lastMousePosition;
 
     public bool mouseDown { get; set; }
 
@@ -21,7 +25,7 @@ public class Crosshair : MonoBehaviour {
         //CreateLineMaterial();
 
         rigidbody = GetComponent<Rigidbody>();
-
+        minMoveDistance = _MINMOVEDISTANCE;
     }
 
     void Start() {
@@ -34,6 +38,7 @@ public class Crosshair : MonoBehaviour {
     }
 
     void Update() {
+
 
         if (Input.GetMouseButtonDown(0)) {
 
@@ -53,7 +58,18 @@ public class Crosshair : MonoBehaviour {
         mousePos.z = 1010.0f;
         mousePos = Camera.main.ScreenToWorldPoint(mousePos);
 
-        if (Vector3.Distance(mousePos, transform.position) > 100) {
+        if (Vector3.Distance(mousePos, lastMousePosition) > 12) {
+            minMoveDistance = _MINMOVEDISTANCE;            
+        }
+        else {
+            if (minMoveDistance >= 10)
+                minMoveDistance -= 1;            
+        }
+
+
+        lastMousePosition = mousePos;
+
+        if (Vector3.Distance(mousePos, transform.position) > minMoveDistance) {
 
             rigidbody.AddForce((mousePos - transform.position).normalized * moveSpeed);
         }

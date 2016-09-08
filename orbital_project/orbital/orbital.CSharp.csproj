@@ -151,6 +151,7 @@
     <Compile Include="Assets\Yarn Spinner\Examples\Demo Scripts\SpriteSwitcher.cs" />
     <Compile Include="Assets\_Scripts\CameraMove.cs" />
     <Compile Include="Assets\_Scripts\Crosshair.cs" />
+    <Compile Include="Assets\_Scripts\FPSLight.cs" />
     <Compile Include="Assets\_Scripts\Grid.cs" />
     <Compile Include="Assets\_Scripts\Manager.cs" />
     <Compile Include="Assets\_Scripts\Rea.cs" />

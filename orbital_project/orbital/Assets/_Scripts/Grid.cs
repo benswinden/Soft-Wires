@@ -16,6 +16,15 @@ public class Grid : MonoBehaviour {
 
     public float chanceToDestroy;
 
+    public bool dolines;
+
+    public LineRenderer lineRenderer;
+    
+
+    List<Vector3> positionsList = new List<Vector3>();
+
+
+
     void Start() {
   
         StartCoroutine("generateChildren");        
@@ -27,7 +36,10 @@ public class Grid : MonoBehaviour {
         var height = Random.Range(0, maxHeight);
         var width = Random.Range(0, maxWidth);
 
+        List<Vector3> currentPositionsList = new List<Vector3>();
+
         for (int k = 0; k <= depth; k++) {
+
             for (int i = 0; i <= height; i++) {
                 for (int j = 0; j <= width; j++) {
 
@@ -38,12 +50,18 @@ public class Grid : MonoBehaviour {
 
                         obj = Instantiate(dot, new Vector3(transform.position.x + (seperation * j), transform.position.y + (seperation * i), transform.position.z + (seperation * k)), Quaternion.identity) as GameObject;
                         obj.transform.parent = transform;
+                        positionsList.Add(obj.transform.position);
+
+                        if (dolines) {
+                            lineRenderer.SetVertexCount(positionsList.Count);
+                            lineRenderer.SetPosition(positionsList.Count - 1, positionsList[positionsList.Count - 1]);
+                        }
                     }
 
                 }
             }
         }
-
+        
         StartCoroutine("checkChildren");
     }
 
@@ -64,5 +82,16 @@ public class Grid : MonoBehaviour {
         yield return new WaitForSeconds(3.0f);
 
         StartCoroutine("checkChildren");
+    }
+
+    GameObject createLineRenderer() {
+
+        GameObject lineRenderer = new GameObject();
+        lineRenderer.AddComponent<LineRenderer>();
+        lineRenderer.transform.parent = transform;
+
+        lineRenderer.GetComponent<LineRenderer>().SetWidth(0.25f, 0.25f);
+
+        return lineRenderer;
     }
 }

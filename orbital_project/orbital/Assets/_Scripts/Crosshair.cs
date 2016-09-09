@@ -48,12 +48,16 @@ public class Crosshair : MonoBehaviour {
         if (activated) {
             if (Input.GetMouseButtonDown(0)) {
 
-                GetComponentInChildren<MeshRenderer>().material = matGreen;
+                foreach (MeshRenderer ren in GetComponentsInChildren<MeshRenderer>()) {
+                    ren.material = matGreen;
+                }
                 mouseDown = true;
             }
             if (Input.GetMouseButtonUp(0)) {
 
-                GetComponentInChildren<MeshRenderer>().material = matBlack;
+                foreach (MeshRenderer ren in GetComponentsInChildren<MeshRenderer>()) {
+                    ren.material = matBlack;
+                }
                 mouseDown = false;
             }
         }
@@ -99,7 +103,10 @@ public class Crosshair : MonoBehaviour {
             Manager.currentCrosshair = this;
 
             activated = true;
-            GetComponentInChildren<MeshRenderer>().enabled = true;
+
+            foreach (MeshRenderer ren in GetComponentsInChildren<MeshRenderer>()) {
+                ren.enabled = true;
+            }
 
             var mousePos = Input.mousePosition;
             mousePos.z = 1000.0f;
@@ -114,7 +121,9 @@ public class Crosshair : MonoBehaviour {
         if (activated) {
 
             activated = false;
-            GetComponentInChildren<MeshRenderer>().enabled = false;
+            foreach (MeshRenderer ren in GetComponentsInChildren<MeshRenderer>()) {
+                ren.enabled = false;
+            }
         }
     }
 

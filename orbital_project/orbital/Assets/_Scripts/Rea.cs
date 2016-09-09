@@ -30,6 +30,8 @@ public class Rea : MonoBehaviour {
     public List<GameObject> thingsToMake;    
     public float timeToMake;
 
+    public bool useRenderCamera;
+
     bool making;
 
 
@@ -55,7 +57,7 @@ public class Rea : MonoBehaviour {
         Debug.DrawRay(transform.position, transform.up * 1000, Color.green);
         Debug.DrawRay(transform.position, transform.right * 1000, Color.red);
 
-        mesh.transform.Rotate(new Vector3(0, 0.1f, 0));
+        mesh.transform.Rotate(new Vector3(0, 0.2f, 0));
 
         if (Input.GetMouseButtonUp(1))
             toggleMode();        
@@ -108,7 +110,7 @@ public class Rea : MonoBehaviour {
             FPMode = false;
             topDownCamera.enabled = true;
             FPCamera.enabled = false;
-            RenderCamera.enabled = false;
+            if (useRenderCamera) RenderCamera.enabled = false;
 
             TDCrosshair.GetComponent<Crosshair>().activate();
             TDCrosshair.transform.rotation = transform.rotation;
@@ -121,7 +123,7 @@ public class Rea : MonoBehaviour {
             FPMode = true;
             topDownCamera.enabled = false;
             FPCamera.enabled = true;
-            RenderCamera.enabled = true;
+            if (useRenderCamera) RenderCamera.enabled = true;
 
             TDCrosshair.GetComponent<Crosshair>().deactivate();
             FPCrosshair.GetComponent<Crosshair>().activate();

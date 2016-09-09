@@ -12,6 +12,7 @@ public class Rea : MonoBehaviour {
     public float moveSpeed = 1;
 
     public float moveDrag = 4;
+    public float driftDrag = 1;
 
     public GameObject mesh;
     public Crosshair crosshair;
@@ -50,7 +51,9 @@ public class Rea : MonoBehaviour {
 
     void Update() {
 
-        Debug.DrawRay(transform.position, transform.forward * 1000, Color.black);
+        Debug.DrawRay(transform.position, transform.forward * 1000, Color.blue);
+        Debug.DrawRay(transform.position, transform.up * 1000, Color.green);
+        Debug.DrawRay(transform.position, transform.right * 1000, Color.red);
 
         mesh.transform.Rotate(new Vector3(0, 0.1f, 0));
 
@@ -71,7 +74,7 @@ public class Rea : MonoBehaviour {
                     StartCoroutine("make");
 
                 rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(crosshair.transform.position.z - transform.position.z, crosshair.transform.position.x - transform.position.x) * 180 / Mathf.PI - 90, -transform.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);                
             }
             else {
                 var targetVector = (Manager.currentCrosshair.transform.position - transform.position).normalized;
@@ -85,7 +88,7 @@ public class Rea : MonoBehaviour {
         }
         else {
 
-            rigidbody.drag = 0;
+            rigidbody.drag = driftDrag;
 
             StopCoroutine("make");
             making = false;
@@ -108,6 +111,7 @@ public class Rea : MonoBehaviour {
             RenderCamera.enabled = false;
 
             TDCrosshair.GetComponent<Crosshair>().activate();
+            TDCrosshair.transform.rotation = transform.rotation;
             FPCrosshair.GetComponent<Crosshair>().deactivate();
         }
         else {

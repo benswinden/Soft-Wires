@@ -18,11 +18,18 @@ public class Rea : MonoBehaviour {
 
     public Camera topDownCamera;
     public Camera FPCamera;
+    public Camera RenderCamera;
 
     public GameObject TDCrosshair;
     public GameObject FPCrosshair;
 
-    public bool FPMode { get; set; }    
+    public bool FPMode { get; set; }
+
+
+    public List<GameObject> thingsToMake;    
+    public float timeToMake;
+
+    bool making;
 
 
     //values for internal use
@@ -37,7 +44,7 @@ public class Rea : MonoBehaviour {
 
         Manager.rea = this;
         Manager.currentCamera = topDownCamera;
-        
+
         rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -59,6 +66,10 @@ public class Rea : MonoBehaviour {
             rigidbody.drag = moveDrag;
 
             if (!FPMode) {
+
+                if (!making) 
+                    StartCoroutine("make");
+
                 rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(crosshair.transform.position.z - transform.position.z, crosshair.transform.position.x - transform.position.x) * 180 / Mathf.PI - 90, -transform.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);
             }
@@ -74,8 +85,10 @@ public class Rea : MonoBehaviour {
         }
         else {
 
-            rigidbody.drag = 0;                                
+            rigidbody.drag = 0;
 
+            StopCoroutine("make");
+            making = false;
         }                
     }
 
@@ -92,6 +105,7 @@ public class Rea : MonoBehaviour {
             FPMode = false;
             topDownCamera.enabled = true;
             FPCamera.enabled = false;
+            RenderCamera.enabled = false;
 
             TDCrosshair.GetComponent<Crosshair>().activate();
             FPCrosshair.GetComponent<Crosshair>().deactivate();
@@ -103,10 +117,25 @@ public class Rea : MonoBehaviour {
             FPMode = true;
             topDownCamera.enabled = false;
             FPCamera.enabled = true;
+            RenderCamera.enabled = true;
 
             TDCrosshair.GetComponent<Crosshair>().deactivate();
             FPCrosshair.GetComponent<Crosshair>().activate();
 
+        }
+    }
+
+    IEnumerator make() {
+
+        if (thingsToMake.Count > 0) {
+            making = true;
+
+            yield return new WaitForSeconds(timeToMake);
+
+            GameObject obj = Instantiate(thingsToMake[Random.Range(0, thingsToMake.Count)], transform.position, Quaternion.identity) as GameObject;
+            obj.GetComponent<Rigidbody>().AddForce(-transform.forward * Random.Range(100, 300), ForceMode.Impulse);
+
+            StartCoroutine("make");
         }
     }
 }

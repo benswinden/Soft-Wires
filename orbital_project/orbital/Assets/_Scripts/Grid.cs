@@ -16,7 +16,12 @@ public class Grid : MonoBehaviour {
 
     public float chanceToDestroy;
 
-    void Awake() {
+    void Start() {
+  
+        StartCoroutine("generateChildren");        
+    }
+
+    IEnumerator generateChildren() {
 
         var depth = Random.Range(0, maxDepth);
         var height = Random.Range(0, maxHeight);
@@ -28,6 +33,9 @@ public class Grid : MonoBehaviour {
 
                     GameObject obj;
                     if (Random.value > chanceToDestroy) {
+
+                        yield return new WaitForSeconds(Random.Range(0, 2));
+
                         obj = Instantiate(dot, new Vector3(transform.position.x + (seperation * j), transform.position.y + (seperation * i), transform.position.z + (seperation * k)), Quaternion.identity) as GameObject;
                         obj.transform.parent = transform;
                     }
@@ -36,6 +44,25 @@ public class Grid : MonoBehaviour {
             }
         }
 
+        StartCoroutine("checkChildren");
+    }
 
+    IEnumerator checkChildren() {
+
+        int count = 0;
+        foreach (Transform child in transform) {
+
+            count++;
+        }
+
+        if (count == 0) {
+
+            StartCoroutine("generateChildren");
+            yield break;
+        }
+
+        yield return new WaitForSeconds(3.0f);
+
+        StartCoroutine("checkChildren");
     }
 }

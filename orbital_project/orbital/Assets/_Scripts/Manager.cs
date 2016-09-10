@@ -6,8 +6,7 @@ using System.Collections.Generic;
 
 public class Manager : MonoBehaviour {
 
-    public GameObject weirdRenderer;
-
+    
     public static Rea rea;
 
     public static Camera currentCamera;
@@ -15,6 +14,8 @@ public class Manager : MonoBehaviour {
     public static Crosshair currentCrosshair;
 
     public static Manager manager;
+
+    public static List<GameObject> pointsOfInterest = new List<GameObject>();
 
     bool waitting;
 
@@ -40,8 +41,7 @@ public class Manager : MonoBehaviour {
             if (!waitting && fps < 45) {
 
                 waitting = true;
-                weirdRenderer.SetActive(false);
-                StartCoroutine("reactivateWeirdness");
+                
             }
 
             if (fpsList.Count < 60) {
@@ -72,14 +72,5 @@ public class Manager : MonoBehaviour {
         yield return new WaitForSeconds(2);
 
         startReporting = true;
-    }
-
-    IEnumerator reactivateWeirdness() {
-
-        yield return new WaitForSeconds(4.0f);
-        
-        waitting = false;        
-        weirdRenderer.SetActive(true);
-        weirdRenderer.GetComponent<Grid>().regnerateLines();
     }
 }

@@ -151,7 +151,7 @@ public class Rea : MonoBehaviour {
             Manager.currentCamera = FPCamera;
 
             FPMode = true;
-            topDownCamera.enabled = false;
+            //topDownCamera.enabled = false;
             FPCamera.enabled = true;
             if (useRenderCamera) RenderCamera.enabled = true;
 

@@ -169,9 +169,11 @@
     <Compile Include="Assets\_Scripts\Grapple.cs" />
     <Compile Include="Assets\_Scripts\Grid.cs" />
     <Compile Include="Assets\_Scripts\Manager.cs" />
+    <Compile Include="Assets\_Scripts\PointOfInterest.cs" />
     <Compile Include="Assets\_Scripts\Rea.cs" />
     <Compile Include="Assets\_Scripts\Selector.cs" />
     <Compile Include="Assets\_Scripts\Selfdestruct.cs" />
+    <Compile Include="Assets\_Scripts\WorldUI\Compass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Kino\Datamosh\Shader\Datamosh.shader" />

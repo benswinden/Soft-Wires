@@ -11,6 +11,8 @@ public class Crosshair : MonoBehaviour {
     public float moveSpeed;
     public float _MINMOVEDISTANCE;
 
+    public float distanceFromCamera = 1000;
+
     public Material matBlack;
     public Material matGreen;
 
@@ -75,7 +77,8 @@ public class Crosshair : MonoBehaviour {
         if (activated && !selectorActivated) {
 
             var mousePos = Input.mousePosition;
-            mousePos.z = 1000.0f;         
+                        
+            mousePos.z = distanceFromCamera;         
             
             mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);            
 
@@ -120,7 +123,7 @@ public class Crosshair : MonoBehaviour {
             }
 
             var mousePos = Input.mousePosition;
-            mousePos.z = 1000.0f;
+            mousePos.z = distanceFromCamera;
             mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);    
 
             transform.position = mousePos;
@@ -141,6 +144,18 @@ public class Crosshair : MonoBehaviour {
     Vector3 lastPosition;
     GameObject hoveringFollower;
 
+    public void deactivateCursor() {
+
+        activated = false;        
+        normalMesh.SetActive(false);
+    }
+
+    public void reactivateCursor() {
+
+        activated = true;
+        normalMesh.SetActive(true);
+    }
+
     public void selectorActive(GameObject follower) {
 
         hoveringFollower = follower;
@@ -155,7 +170,7 @@ public class Crosshair : MonoBehaviour {
 
     public void selectorInactive() {
 
-        transform.position = lastPosition;
+        //transform.position = lastPosition;
         selectorActivated = false;
         normalMesh.SetActive(true);
         selectorMesh.SetActive(false);

@@ -8,6 +8,8 @@ public class Compass : MonoBehaviour {
 
     public float turnSpeed = 1;
 
+    public GameObject cone;
+
     bool randomRotation;
     GameObject closest;
 
@@ -19,10 +21,12 @@ public class Compass : MonoBehaviour {
     void Update() {
 
         if (closest != null) {
+
             var targetVector = (closest.transform.position - Manager.rea.transform.position).normalized;
+            targetVector = Manager.rea.transform.forward;
             var rotationTarget = Quaternion.LookRotation(targetVector);
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotationTarget, Time.deltaTime * turnSpeed);
+            cone.transform.rotation = Quaternion.Slerp(cone.transform.rotation, rotationTarget, Time.deltaTime * turnSpeed);
         }
     }
 

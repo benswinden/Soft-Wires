@@ -26,6 +26,7 @@ public class Follower : MonoBehaviour {
 
     public LineRenderer lineRenderer;
 
+    public GameObject nameHolder;
     public TextMeshPro nameText;    
     public string followerName;
 
@@ -72,6 +73,14 @@ public class Follower : MonoBehaviour {
 
 
         if (hoverActive) {
+
+
+            var targetVector = (nameHolder.transform.position - Manager.rea.transform.position).normalized;            
+            var rotationTarget = Quaternion.LookRotation(-targetVector);
+
+            nameHolder.transform.rotation = Quaternion.Slerp(nameHolder.transform.rotation, rotationTarget, Time.deltaTime * turnSpeed);
+
+
 
             var mousePos = Input.mousePosition;
             mousePos.z = Vector3.Distance(transform.position, Manager.currentCamera.transform.position);

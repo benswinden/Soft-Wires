@@ -9,6 +9,9 @@ public class Manager : MonoBehaviour {
     
     public static Rea rea;
 
+    public static Camera worldUICamera;
+    public static WorldUI worldUI;
+
     public static Camera currentCamera;
 
     public static Crosshair currentCrosshair;

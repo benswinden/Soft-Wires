@@ -29,23 +29,11 @@ Eprovid
 Yiubsix
 Wohoag
 East Tac 
-Upper South Cilt 
 Sophilt Hill
 Plexaimp South
-Upper West Scheggel 
-Snesug South
-Upper Turrak 
-Waterside Jerot 
-Skioloosthift Corner
-Digoatop Heights
-Con Corner
 Maind Acre
 Breclosk Park
 Splutwelp Street
-Lower Reggiosk 
-Lower Flonop 
-Lower East Domic 
-Little Smuppat 
 Splarattod Heights
 Skaiffages Circle
 Lower West Twib 
@@ -173,8 +161,6 @@ Osage Bow-Wood
 Osage Violet Nightshade
 Hard Peach
 Valley Poisonflower
-Deciduous Brilliant Speedwell
-Meadow Chrysanthemum Viburnum
 Herb Spring Moss
 Kimberly Mountain Fennel
 Pudina Nodding Nightshade
@@ -183,29 +169,24 @@ Osage Bow-Wood
 Osage Violet Nightshade
 Hard Peach
 Valley Poisonflower
-Deciduous Brilliant Speedwell
-Meadow Chrysanthemum Viburnum
 Herb Spring Moss
-Kimberly Mountain Fennel
-Pudina Nodding Nightshade
+Mountain Fennel
+Nodding Nightshade
 Bearberry Garlic
 Silky Kudzu
-Speckled Spoolwood
-Black-Weed Grapefruit
+Spoolwood
+Black-Weed
 Blue Hemp
-Polecat Polecat Nightshade
-Sharp-Fringed Poor Poke
-Black-Weed Nature's Hair
-Common Dame's Fever Weed
-White-Root Appalachian Woundwort
+Polecat Nightshade
+White-Root
 Appalachian Posy
 Mossycup Buttons
-Deadly Rapeseed
+Deadly Grapeseed
 Mango Peanut
 Winter Black Cherry
-Scurvy Clumpfoot Raspberry
+Clumpfoot Raspberry
 Hen Rogue's Toes
-Scotch True Sneezewort
+Scotch Sneezewort
 Black-Eyed Land Tulip
 Sword Coyote Shadbush
 Allita

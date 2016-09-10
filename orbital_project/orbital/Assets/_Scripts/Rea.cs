@@ -37,6 +37,7 @@ public class Rea : MonoBehaviour {
 
     bool hovering;
     GameObject hoveringFollower;
+    GameObject hoveringGizmo;
 
     bool grappleShot;
     bool making;
@@ -68,8 +69,8 @@ public class Rea : MonoBehaviour {
 
         mesh.transform.Rotate(new Vector3(0, 0.2f, 0));
 
-        if (Input.GetMouseButtonUp(1))
-            toggleMode();        
+        //if (Input.GetMouseButtonUp(1))
+            //toggleMode();        
 
     }
 
@@ -99,16 +100,24 @@ public class Rea : MonoBehaviour {
         }
         else if (Input.GetMouseButtonDown(0) && hovering) {
 
+            // FOLLOWER HOVER
+            if (hoveringFollower != null) {
+                print("!!!");
+                if (followerList.Contains(hoveringFollower)) {
 
-            if (followerList.Contains(hoveringFollower)) {
+                    hoveringFollower.GetComponent<Follower>().deactivate();
+                    followerList.Remove(hoveringFollower);
 
-                hoveringFollower.GetComponent<Follower>().deactivate();
-                followerList.Remove(hoveringFollower);
-
-                //Manager.currentCrosshair.selectorInactive();
+                    //Manager.currentCrosshair.selectorInactive();
+                }
+                else
+                    shootGrapple();
             }
-            else
-                shootGrapple();
+            // GIZMO HOVER
+            else {
+
+
+            }
         }
         else {
 
@@ -119,10 +128,10 @@ public class Rea : MonoBehaviour {
         }                
     }
 
-    void toggleMode() {
+    public void toggleMode() {
 
 
-        if (hovering) {
+        if (hoveringFollower != null) {
 
             Manager.currentCrosshair.selectorInactive();
             hovering = false;
@@ -161,6 +170,21 @@ public class Rea : MonoBehaviour {
         }
     }
 
+    public void gizmoHover(GameObject gizmo) {
+
+        hoveringGizmo = gizmo;
+        Manager.currentCrosshair.deactivateCursor();
+        hovering = true;
+    }
+
+    public void gizmoHoverExit() {
+
+        hoveringGizmo = null;
+        Manager.currentCrosshair.reactivateCursor();
+        hovering = false;
+    }
+
+
     public void followerHover(Follower follower) {
 
         hoveringFollower = follower.gameObject;
@@ -170,6 +194,7 @@ public class Rea : MonoBehaviour {
 
     public void followerHoverExit() {
 
+        hoveringFollower = null;
         Manager.currentCrosshair.selectorInactive();
         hovering = false;
     }

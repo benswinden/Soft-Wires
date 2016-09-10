@@ -10,18 +10,25 @@ public class Crosshair : MonoBehaviour {
 
     public float moveSpeed;
     public float _MINMOVEDISTANCE;
-    float minMoveDistance;
-
-    new Rigidbody rigidbody;
 
     public Material matBlack;
     public Material matGreen;
 
     public bool topDown;
 
+    public GameObject normalMesh;
+    public GameObject selectorMesh;
+
+
+    float minMoveDistance;
+    new Rigidbody rigidbody;
     Vector3 lastMousePosition;
 
+    bool selectorActivated;
+
     public bool mouseDown { get; set; }    
+
+
 
     void Awake() {
 
@@ -48,14 +55,14 @@ public class Crosshair : MonoBehaviour {
         if (activated) {
             if (Input.GetMouseButtonDown(0)) {
 
-                foreach (MeshRenderer ren in GetComponentsInChildren<MeshRenderer>()) {
+                foreach (MeshRenderer ren in normalMesh.GetComponentsInChildren<MeshRenderer>()) {
                     ren.material = matGreen;
                 }
                 mouseDown = true;
             }
             if (Input.GetMouseButtonUp(0)) {
 
-                foreach (MeshRenderer ren in GetComponentsInChildren<MeshRenderer>()) {
+                foreach (MeshRenderer ren in normalMesh.GetComponentsInChildren<MeshRenderer>()) {
                     ren.material = matBlack;
                 }
                 mouseDown = false;
@@ -65,7 +72,7 @@ public class Crosshair : MonoBehaviour {
 
     void FixedUpdate() {
 
-        if (activated) {
+        if (activated && !selectorActivated) {
 
             var mousePos = Input.mousePosition;
             mousePos.z = 1000.0f;         
@@ -92,6 +99,10 @@ public class Crosshair : MonoBehaviour {
 
                 transform.rotation = Manager.rea.transform.rotation;
             }
+        }
+        else if (activated && selectorActivated) {
+
+            transform.position = hoveringFollower.transform.position;
         }
 
     }
@@ -125,6 +136,29 @@ public class Crosshair : MonoBehaviour {
                 ren.enabled = false;
             }
         }
+    }
+
+    Vector3 lastPosition;
+    GameObject hoveringFollower;
+
+    public void selectorActive(GameObject follower) {
+
+        hoveringFollower = follower;
+        rigidbody.velocity = Vector3.zero;
+
+        lastPosition = transform.position;
+        transform.position = follower.transform.position;
+        selectorActivated = true;
+        normalMesh.SetActive(false);
+        selectorMesh.SetActive(true);
+    }
+
+    public void selectorInactive() {
+
+        transform.position = lastPosition;
+        selectorActivated = false;
+        normalMesh.SetActive(true);
+        selectorMesh.SetActive(false);
     }
 
     public Material lineMaterial;

@@ -25,6 +25,7 @@ public class FPSLight : MonoBehaviour {
             string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
 
             currentFPS = text;
+            Manager.manager.reportFPS(fps);
         }
     }
 

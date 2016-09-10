@@ -26,14 +26,23 @@ public class Rea : MonoBehaviour {
 
     public bool FPMode { get; set; }
 
+    public float grappleShotForce = 1000;
+    public GameObject grapple;
 
     public List<GameObject> thingsToMake;    
     public float timeToMake;
 
     public bool useRenderCamera;
 
+
+    bool hovering;
+    GameObject hoveringFollower;
+
+    bool grappleShot;
     bool making;
 
+
+    List<GameObject> followerList = new List<GameObject>();
 
     //values for internal use
     private Quaternion _lookRotation;
@@ -66,7 +75,7 @@ public class Rea : MonoBehaviour {
 
     void FixedUpdate() {
 
-        if (Manager.currentCrosshair.mouseDown) {
+        if (Manager.currentCrosshair.mouseDown && !hovering) {
 
             rigidbody.drag = moveDrag;
 
@@ -88,6 +97,19 @@ public class Rea : MonoBehaviour {
             rigidbody.AddForce(transform.forward * moveSpeed);
 
         }
+        else if (Input.GetMouseButtonDown(0) && hovering) {
+
+
+            if (followerList.Contains(hoveringFollower)) {
+
+                hoveringFollower.GetComponent<Follower>().deactivate();
+                followerList.Remove(hoveringFollower);
+
+                //Manager.currentCrosshair.selectorInactive();
+            }
+            else
+                shootGrapple();
+        }
         else {
 
             rigidbody.drag = driftDrag;
@@ -98,6 +120,14 @@ public class Rea : MonoBehaviour {
     }
 
     void toggleMode() {
+
+
+        if (hovering) {
+
+            Manager.currentCrosshair.selectorInactive();
+            hovering = false;
+            hoveringFollower.GetComponent<Follower>().hoverExit();
+        }
 
         if (FPMode) {
 
@@ -129,6 +159,45 @@ public class Rea : MonoBehaviour {
             FPCrosshair.GetComponent<Crosshair>().activate();
 
         }
+    }
+
+    public void followerHover(Follower follower) {
+
+        hoveringFollower = follower.gameObject;
+        Manager.currentCrosshair.selectorActive(follower.gameObject);        
+        hovering = true;
+    }
+
+    public void followerHoverExit() {
+
+        Manager.currentCrosshair.selectorInactive();
+        hovering = false;
+    }
+
+    void shootGrapple() {
+
+        if (!grappleShot) {
+
+            GameObject grap = Instantiate(grapple, transform.position, Quaternion.identity) as GameObject;
+            
+            grap.transform.LookAt(hoveringFollower.transform);
+            grap.GetComponent<Rigidbody>().AddForce(grap.transform.forward * grappleShotForce, ForceMode.Impulse);
+                        
+            grappleShot = true;
+        }
+    }
+
+    public void grappleDeath() {
+
+        grappleShot = false;
+    }
+
+    public void followerHit(GameObject follower) {
+        
+        followerList.Add(follower);
+        Manager.currentCrosshair.selectorInactive();
+        hoveringFollower.GetComponentInParent<Follower>().activate();        
+        grappleDeath();        
     }
 
     IEnumerator make() {

@@ -65,6 +65,22 @@ public class Grid : MonoBehaviour {
         StartCoroutine("checkChildren");
     }
 
+    public void regnerateLines() {
+        StartCoroutine("regenLines");
+    }
+
+    IEnumerator regenLines() {
+
+        yield return new WaitForSeconds(1);
+
+        lineRenderer.SetVertexCount(positionsList.Count);
+        int count = 0;
+        foreach (Vector3 pos in positionsList) {
+            lineRenderer.SetPosition(count, pos);
+            count++;
+        }
+    }
+
     IEnumerator checkChildren() {
 
         int count = 0;

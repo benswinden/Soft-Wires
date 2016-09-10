@@ -166,6 +166,7 @@
     <Compile Include="Assets\_Scripts\Crosshair.cs" />
     <Compile Include="Assets\_Scripts\FPSLight.cs" />
     <Compile Include="Assets\_Scripts\Follower.cs" />
+    <Compile Include="Assets\_Scripts\Grapple.cs" />
     <Compile Include="Assets\_Scripts\Grid.cs" />
     <Compile Include="Assets\_Scripts\Manager.cs" />
     <Compile Include="Assets\_Scripts\Rea.cs" />

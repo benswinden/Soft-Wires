@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+
 
 
 public class Follower : MonoBehaviour {
@@ -15,7 +17,6 @@ public class Follower : MonoBehaviour {
 
     public GameObject mesh;
     
-
     public List<GameObject> thingsToMake;    
     public float timeToMake;
 
@@ -23,10 +24,17 @@ public class Follower : MonoBehaviour {
 
     public LineRenderer lineRenderer;
 
+    public TextMeshPro nameText;    
+
+    public string followerName;
+
+
 
     float moveSpeed;
 
     bool making;
+
+    bool hoverActive;
 
     bool thrusting;
     GameObject target;
@@ -41,6 +49,8 @@ public class Follower : MonoBehaviour {
 
     void Awake() {
 
+        lineRenderer.SetVertexCount(0);
+
         targetPosition = Vector3.zero;
         rigidbody = GetComponent<Rigidbody>();
     }
@@ -48,8 +58,7 @@ public class Follower : MonoBehaviour {
     void Start() {
 
         moveSpeed = maxMoveSpeed;
-
-        target = Manager.rea.gameObject;
+        
     }
 
     void Update() {
@@ -59,51 +68,96 @@ public class Follower : MonoBehaviour {
 
     void FixedUpdate() {
 
-        var distance = Vector3.Distance(transform.position, target.transform.position);
 
-        if (target != null && distance > 50) {
+        if (hoverActive) {
 
-            thrusting = true;
+            var mousePos = Input.mousePosition;
+            mousePos.z = Vector3.Distance(transform.position, Manager.currentCamera.transform.position);
+
+            mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);
+
+            if (Vector3.Distance(transform.position, mousePos) > 150) {
+
+                hoverExit();
+            }
         }
 
-        if (distance < maxMoveSpeed / 10) {
+        if (target != null ) {
 
-            moveSpeed = distance * 10;
-        }
+            var distance = Vector3.Distance(transform.position, target.transform.position);
+
+            if (target != null && distance > 50) {
+
+                thrusting = true;
+            }
+
+            if (distance < maxMoveSpeed / 10) {
+
+                moveSpeed = distance * 10;
+            }
 
 
-        if (thrusting) {
-            rigidbody.drag = moveDrag;
+            if (thrusting) {
+                rigidbody.drag = moveDrag;
         
-            if (!making) 
-                StartCoroutine("make");
+                if (!making) 
+                    StartCoroutine("make");
 
             
-            var targetVector = (target.transform.position - transform.position).normalized;
-            var rotationTarget = Quaternion.LookRotation(targetVector);
+                var targetVector = (target.transform.position - transform.position).normalized;
+                var rotationTarget = Quaternion.LookRotation(targetVector);
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotationTarget, Time.deltaTime * turnSpeed);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rotationTarget, Time.deltaTime * turnSpeed);
             
-            rigidbody.AddForce(transform.forward * moveSpeed);
-        }        
-        else {
+                rigidbody.AddForce(transform.forward * moveSpeed);
+            }        
+            else {
 
-            rigidbody.drag = driftDrag;
+                rigidbody.drag = driftDrag;
 
-            StopCoroutine("make");
-            making = false;
-        }
-
-        if (target != null) {
+                StopCoroutine("make");
+                making = false;
+            }
 
             lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, target.transform.position);
+            lineRenderer.SetPosition(1, target.transform.position);        
         }
-        else if (targetPosition != Vector3.zero) {
-            
-            lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, target.transform.position);
-        }
+    }
+
+    void OnMouseEnter() {
+
+        displayName();
+        hoverActive = true;
+        Manager.rea.followerHover(this);
+    }
+
+    public void hoverExit() {
+
+        clearName();
+        hoverActive = false;
+        Manager.rea.followerHoverExit();
+    }
+
+    public void activate() {
+
+        lineRenderer.SetVertexCount(2);
+        target = Manager.rea.gameObject;
+    }
+
+    public void deactivate() {
+
+        lineRenderer.SetVertexCount(0);
+        target = null;
+    }
+
+    void displayName() {
+
+        nameText.SetText(followerName);
+    }
+
+    void clearName() {
+
+        nameText.SetText("");
     }
 
     IEnumerator make() {

@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using System.IO;
+
 
 
 
@@ -25,7 +27,6 @@ public class Follower : MonoBehaviour {
     public LineRenderer lineRenderer;
 
     public TextMeshPro nameText;    
-
     public string followerName;
 
 
@@ -57,8 +58,9 @@ public class Follower : MonoBehaviour {
 
     void Start() {
 
-        moveSpeed = maxMoveSpeed;
-        
+        followerName = (Manager.nameList[Random.Range(0, Manager.nameList.Count)]);
+
+        moveSpeed = maxMoveSpeed;        
     }
 
     void Update() {

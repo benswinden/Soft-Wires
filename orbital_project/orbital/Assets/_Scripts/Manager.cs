@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Text.RegularExpressions;
 
 public class Manager : MonoBehaviour {
 
@@ -17,12 +17,17 @@ public class Manager : MonoBehaviour {
 
     public static List<GameObject> pointsOfInterest = new List<GameObject>();
 
-    bool waitting;
+    public static List<string> nameList = new List<string>();
 
+    bool waitting;
     bool startReporting;
 
-    void Awake() {
+    public TextAsset textFile;
 
+
+    void Awake() {
+        
+        makeNameList();
 
         Manager.manager = this;
         Cursor.visible = false;
@@ -72,5 +77,20 @@ public class Manager : MonoBehaviour {
         yield return new WaitForSeconds(2);
 
         startReporting = true;
+    }        
+
+    void makeNameList() {
+
+        string textAsString = textFile.text;
+        string[] fLines = Regex.Split ( textAsString, "\n|\r|\r\n" );
+ 
+        for ( int i=0; i < fLines.Length; i++ ) {
+ 
+            string word = fLines[i];
+
+            if (!word.Equals(""))
+                Manager.nameList.Add(word);
+        }
     }
+    
 }

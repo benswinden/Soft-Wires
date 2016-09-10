@@ -182,6 +182,7 @@
     <None Include="Assets\Kino\Isoline\Shader\Isoline.shader" />
     <None Include="Assets\Kino\Isoline\Shader\SimplexNoise3D.cginc" />
     <None Include="Assets\Kino\Slitscan\Shader\Slitscan.shader" />
+    <None Include="Assets\Resources\Words.txt" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />

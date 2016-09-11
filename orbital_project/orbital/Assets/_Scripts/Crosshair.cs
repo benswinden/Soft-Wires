@@ -76,10 +76,8 @@ public class Crosshair : MonoBehaviour {
 
         if (activated && !selectorActivated) {
 
-            var mousePos = Input.mousePosition;
-                        
-            mousePos.z = distanceFromCamera;         
-            
+            var mousePos = Input.mousePosition;                        
+            mousePos.z = distanceFromCamera;                     
             mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);            
 
             if (Vector3.Distance(mousePos, lastMousePosition) > 12) {

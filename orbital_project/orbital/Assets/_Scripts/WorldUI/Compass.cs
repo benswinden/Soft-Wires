@@ -31,6 +31,11 @@ public class Compass : MonoBehaviour {
     }
 
 
+    public void Toggle() {
+
+        Manager.rea.resetRotation();
+    }
+
     IEnumerator checkForPoints() {
 
         yield return new WaitForSeconds(2.0f);

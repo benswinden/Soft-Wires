@@ -24,7 +24,7 @@ public class Gizmo : MonoBehaviour {
             mousePos.z = Vector3.Distance(transform.position, Manager.worldUICamera.transform.position);
             mousePos = Manager.worldUICamera.ScreenToWorldPoint(mousePos);
 
-            if (Vector3.Distance( startMousePosition, mousePos) > 24) {
+            if (Vector3.Distance( startMousePosition, mousePos) > 30) {
 
                 hoverExit();
             }

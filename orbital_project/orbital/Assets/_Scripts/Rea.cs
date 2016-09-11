@@ -58,7 +58,7 @@ public class Rea : MonoBehaviour {
         Manager.rea = this;
         Manager.currentCamera = topDownCamera;
 
-        rigidbody = GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();        
     }
 
     void Update() {
@@ -102,7 +102,7 @@ public class Rea : MonoBehaviour {
 
             // FOLLOWER HOVER
             if (hoveringFollower != null) {
-                print("!!!");
+                
                 if (followerList.Contains(hoveringFollower)) {
 
                     hoveringFollower.GetComponent<Follower>().deactivate();
@@ -170,6 +170,17 @@ public class Rea : MonoBehaviour {
         }
     }
 
+    public void resetRotation() {
+
+        transform.rotation = Quaternion.LookRotation(Vector3.forward);
+        topDownCamera.transform.position = transform.position + (transform.up * 1000);
+        topDownCamera.transform.rotation = transform.rotation;
+        topDownCamera.transform.Rotate(new Vector3(90, 0, 0));
+
+        if (!FPMode)
+            TDCrosshair.transform.rotation = transform.rotation;
+    }
+
     public void gizmoHover(GameObject gizmo) {
 
         hoveringGizmo = gizmo;
@@ -221,7 +232,7 @@ public class Rea : MonoBehaviour {
         
         followerList.Add(follower);
         Manager.currentCrosshair.selectorInactive();
-        hoveringFollower.GetComponentInParent<Follower>().activate();        
+        follower.GetComponent<Follower>().activate();        
         grappleDeath();        
     }
 

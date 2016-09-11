@@ -84,10 +84,10 @@ public class Follower : MonoBehaviour {
 
             var mousePos = Input.mousePosition;
             mousePos.z = Vector3.Distance(transform.position, Manager.currentCamera.transform.position);
-
             mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);
 
-            if (Vector3.Distance(transform.position, mousePos) > 150) {
+            print(Vector3.Distance(startMousePosition, mousePos));
+            if (Vector3.Distance(startMousePosition, mousePos) > 150) {
 
                 hoverExit();
             }
@@ -135,7 +135,14 @@ public class Follower : MonoBehaviour {
         }
     }
 
+    Vector3 startMousePosition;
+
     void OnMouseEnter() {
+
+        var mousePos = Input.mousePosition;
+        mousePos.z = Vector3.Distance(transform.position, Manager.currentCamera.transform.position);
+        mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);
+        startMousePosition = mousePos;
 
         displayName();
         hoverActive = true;

@@ -19,8 +19,14 @@ public class FPCamGizmo : MonoBehaviour {
 
     void Awake() {
 
+        
         animation = GetComponent<Animation>();
     }
+
+    void Start() {
+        Manager.rea.fpGizmo = this;
+    }
+
 
     void Update() {
 
@@ -50,13 +56,15 @@ public class FPCamGizmo : MonoBehaviour {
 
                     obj.material = matBlack;
                 }
-
-                Manager.rea.toggleMode();
+                
                 activated = false;
                 animation["Giz_FPCam_Activate"].speed = -1;
                 animation["Giz_FPCam_Activate"].time = animation["Giz_FPCam_Activate"].length;
                 animation.Play();
                 animating = true;
+
+                if (Manager.rea.FPMode)
+                    Manager.rea.toggleMode();
             }
             else {
 

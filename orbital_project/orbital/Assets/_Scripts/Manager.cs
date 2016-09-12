@@ -22,6 +22,8 @@ public class Manager : MonoBehaviour {
 
     public static List<string> nameList = new List<string>();
 
+    public static bool firstImageButtonToggle;
+
     bool waitting;
     bool startReporting;
 
@@ -29,11 +31,16 @@ public class Manager : MonoBehaviour {
 
 
     void Awake() {
-        
+
+        if (Manager.manager != null)
+            Destroy(gameObject);
+
         makeNameList();
 
         Manager.manager = this;
         Cursor.visible = false;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     int count = 0;

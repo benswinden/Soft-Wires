@@ -165,20 +165,31 @@
     <Compile Include="Assets\_Scripts\CameraMove.cs" />
     <Compile Include="Assets\_Scripts\Crosshair.cs" />
     <Compile Include="Assets\_Scripts\FPSLight.cs" />
+    <Compile Include="Assets\_Scripts\FadeIn.cs" />
+    <Compile Include="Assets\_Scripts\FadeOut.cs" />
     <Compile Include="Assets\_Scripts\Follower.cs" />
     <Compile Include="Assets\_Scripts\Grapple.cs" />
     <Compile Include="Assets\_Scripts\Grid.cs" />
     <Compile Include="Assets\_Scripts\Manager.cs" />
     <Compile Include="Assets\_Scripts\PointOfInterest.cs" />
+    <Compile Include="Assets\_Scripts\RandomMesh.cs" />
     <Compile Include="Assets\_Scripts\Rea.cs" />
     <Compile Include="Assets\_Scripts\Selector.cs" />
     <Compile Include="Assets\_Scripts\Selfdestruct.cs" />
     <Compile Include="Assets\_Scripts\WorldUI\Compass.cs" />
     <Compile Include="Assets\_Scripts\WorldUI\FPCamGizmo.cs" />
     <Compile Include="Assets\_Scripts\WorldUI\Gizmo.cs" />
+    <Compile Include="Assets\_Scripts\WorldUI\ImageButton.cs" />
+    <Compile Include="Assets\_Scripts\WorldUI\ImageGizmo.cs" />
+    <Compile Include="Assets\_Scripts\WorldUI\ImageUI.cs" />
     <Compile Include="Assets\_Scripts\WorldUI\RandomNumbers.cs" />
+    <Compile Include="Assets\_Scripts\WorldUI\SoundGizmo.cs" />
+    <Compile Include="Assets\_Scripts\WorldUI\Tuning.cs" />
+    <Compile Include="Assets\_Scripts\WorldUI\UISlot.cs" />
+    <Compile Include="Assets\_Scripts\WorldUI\WorldImageHolder.cs" />
     <Compile Include="Assets\_Scripts\WorldUI\WorldUI.cs" />
     <Compile Include="Assets\_Scripts\WorldUI\WorldUICamera.cs" />
+    <Compile Include="Assets\_Scripts\titleAnim.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Kino\Datamosh\Shader\Datamosh.shader" />

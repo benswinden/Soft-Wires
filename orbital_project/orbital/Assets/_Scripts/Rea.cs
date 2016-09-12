@@ -35,6 +35,8 @@ public class Rea : MonoBehaviour {
     public bool useRenderCamera;
 
 
+    public FPCamGizmo fpGizmo { get; set; }
+
     bool hovering;
     GameObject hoveringFollower;
     GameObject hoveringGizmo;
@@ -140,6 +142,9 @@ public class Rea : MonoBehaviour {
 
         if (FPMode) {
 
+            if (fpGizmo.activated)
+                fpGizmo.Toggle();
+
             Manager.currentCamera = topDownCamera;
 
             topDownCamera.transform.position = transform.position + (transform.up * 1000);
@@ -231,7 +236,7 @@ public class Rea : MonoBehaviour {
     public void followerHit(GameObject follower) {
         
         followerList.Add(follower);
-        Manager.currentCrosshair.selectorInactive();
+        //Manager.currentCrosshair.selectorInactive();
         follower.GetComponent<Follower>().activate();        
         grappleDeath();        
     }

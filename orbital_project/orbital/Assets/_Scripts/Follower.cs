@@ -168,7 +168,7 @@ public class Follower : MonoBehaviour {
     Vector3 startMousePosition;
 
     void OnMouseEnter() {
-
+        
         if (Vector3.Distance(Manager.user.body.transform.position, transform.position) > 50) {
 
             var mousePos = Input.mousePosition;

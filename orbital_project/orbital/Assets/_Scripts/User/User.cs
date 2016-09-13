@@ -20,10 +20,10 @@ public class User : MonoBehaviour {
     [Header("Containers")]
     public GameObject body;
     public GameObject grapple;    
-    public Camera topDownCamera;
-    public Camera FPCamera;    
-    public GameObject TDCrosshair;
-    public GameObject FPCrosshair;    
+    public Camera topCamera;
+    public Camera frontCamera;    
+    public GameObject topCrosshair;
+    public GameObject frontCrosshair;    
 
     [Space]
     public bool debug;
@@ -52,7 +52,7 @@ public class User : MonoBehaviour {
     void Awake() {
 
         Manager.user = this;
-        Manager.currentCamera = topDownCamera;
+        Manager.currentCamera = topCamera;
 
         bodyRigidbody = body.GetComponent<Rigidbody>();
 
@@ -72,28 +72,40 @@ public class User : MonoBehaviour {
     void FixedUpdate() {
 
 
+        // Check if the mouse is currently over a gizmo display
+        //  If it is, set that as the currentCamera, otherwise we user the Top camera as default
+        bool overDisplay = false;
+        var mousePos = Input.mousePosition;
+        mousePos.z = 96;
+        mousePos = Manager.worldUICamera.ScreenToWorldPoint(mousePos);
+        Ray ray = new Ray(mousePos, Vector3.forward);
+
+        Debug.DrawRay(mousePos, Vector3.forward * 10, Color.magenta, 1);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100.0f)) {
+
+            if (hit.collider.tag.Equals("CameraDisplay")) {
+
+                overDisplay = true;
+                Manager.currentCamera = frontCamera;                
+            }
+        }
+        else {
+            
+            Manager.currentCamera = topCamera;            
+        }
+        
+
         if (Input.GetMouseButton(0) && !hovering) {
 
             bodyRigidbody.drag = moveDrag;
 
-            // Check if the mouse is currently over a gizmo display
-            bool overDisplay = false;
-            var mousePos = Input.mousePosition;
-            mousePos.z = 96;
-            mousePos = Manager.worldUICamera.ScreenToWorldPoint(mousePos);
-            Ray ray = new Ray(mousePos, Vector3.forward);
-
-            Debug.DrawRay(mousePos, Vector3.forward * 10, Color.magenta, 1);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100.0f)) {
-
-                overDisplay = true;
-            }
             
             // Mouse is hovering over a display, so rotate us based on that ( For now just FP, would need to be adapted to support different cameras
             if (overDisplay) {
 
-                var targetVector = (FPCrosshair.transform.position - body.transform.position).normalized;
+                var targetVector = (frontCrosshair.transform.position - body.transform.position).normalized;
                 var rotationTarget = Quaternion.LookRotation(targetVector);
 
                 body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTarget, Time.deltaTime * FPturnSpeed);
@@ -101,7 +113,7 @@ public class User : MonoBehaviour {
             // Normal Top down rotation
             else {
                 
-                rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(TDCrosshair.transform.position.z - body.transform.position.z, TDCrosshair.transform.position.x - body.transform.position.x) * 180 / Mathf.PI - 90, -body.transform.up);
+                rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(topCrosshair.transform.position.z - body.transform.position.z, topCrosshair.transform.position.x - body.transform.position.x) * 180 / Mathf.PI - 90, -body.transform.up);
                 body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);                
             }            
 
@@ -153,29 +165,29 @@ public class User : MonoBehaviour {
             if (fpGizmo.activated)
                 fpGizmo.Toggle();
 
-            Manager.currentCamera = topDownCamera;
+            Manager.currentCamera = topCamera;
 
-            topDownCamera.transform.position = body.transform.position + (transform.up * 1000);
-            topDownCamera.transform.rotation = body.transform.rotation;
-            topDownCamera.transform.Rotate(new Vector3(90, 0, 0));
+            topCamera.transform.position = body.transform.position + (transform.up * 1000);
+            topCamera.transform.rotation = body.transform.rotation;
+            topCamera.transform.Rotate(new Vector3(90, 0, 0));
 
             FPMode = false;
-            topDownCamera.enabled = true;
-            FPCamera.enabled = false;            
+            topCamera.enabled = true;
+            frontCamera.enabled = false;            
 
             //TDCrosshair.GetComponent<Crosshair>().activate();
-            TDCrosshair.transform.rotation = body.transform.rotation;
-            FPCrosshair.GetComponent<Crosshair>().deactivate();
+            topCrosshair.transform.rotation = body.transform.rotation;
+            frontCrosshair.GetComponent<Crosshair>().deactivate();
         }
         else {
 
-            Manager.currentCamera = FPCamera;
+            Manager.currentCamera = frontCamera;
 
             FPMode = true;            
-            FPCamera.enabled = true;            
+            frontCamera.enabled = true;            
 
             //TDCrosshair.GetComponent<Crosshair>().deactivate();
-            FPCrosshair.GetComponent<Crosshair>().activate();
+            frontCrosshair.GetComponent<Crosshair>().activate();
 
         }
     }
@@ -183,12 +195,12 @@ public class User : MonoBehaviour {
     public void resetRotation() {
 
         body.transform.rotation = Quaternion.LookRotation(Vector3.forward);
-        topDownCamera.transform.position = body.transform.position + (transform.up * 1000);
-        topDownCamera.transform.rotation = body.transform.rotation;
-        topDownCamera.transform.Rotate(new Vector3(90, 0, 0));
+        topCamera.transform.position = body.transform.position + (transform.up * 1000);
+        topCamera.transform.rotation = body.transform.rotation;
+        topCamera.transform.Rotate(new Vector3(90, 0, 0));
 
         if (!FPMode)
-            TDCrosshair.transform.rotation = body.transform.rotation;
+            topCrosshair.transform.rotation = body.transform.rotation;
     }
 
     public void gizmoHover(GameObject gizmo) {

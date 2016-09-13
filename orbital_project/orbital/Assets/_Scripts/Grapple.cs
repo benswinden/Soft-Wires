@@ -14,11 +14,11 @@ public class Grapple : MonoBehaviour {
     void Update() {
 
         lineRen.SetPosition(0, transform.position);
-        lineRen.SetPosition(1, Manager.rea.transform.position);
+        lineRen.SetPosition(1, Manager.user.body.transform.position);
 
-        if (Vector3.Distance(Manager.rea.transform.position, transform.position) > dieAfterDistance) {
+        if (Vector3.Distance(Manager.user.body.transform.position, transform.position) > dieAfterDistance) {
 
-            Manager.rea.grappleDeath();
+            Manager.user.grappleDeath();
             Destroy(gameObject);
         }
     }
@@ -27,7 +27,7 @@ public class Grapple : MonoBehaviour {
         
         if (coll.collider.tag.Equals("Follower")) {
 
-            Manager.rea.followerHit(coll.collider.transform.parent.gameObject); 
+            Manager.user.followerHit(coll.collider.transform.parent.gameObject); 
             Destroy(gameObject);
         }
     }

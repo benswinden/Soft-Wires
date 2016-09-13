@@ -18,6 +18,8 @@ public class Crosshair : MonoBehaviour {
 
     public bool topDown;
 
+    public Camera camera;               // The camera associated with this crosshair
+
     public GameObject normalMesh;
     public GameObject selectorMesh;
 
@@ -27,8 +29,6 @@ public class Crosshair : MonoBehaviour {
     Vector3 lastMousePosition;
 
     bool selectorActivated;
-
-    public bool mouseDown { get; set; }    
 
 
 
@@ -55,19 +55,20 @@ public class Crosshair : MonoBehaviour {
     void Update() {
 
         if (activated) {
+
+            // Change color when the mouse is held
             if (Input.GetMouseButtonDown(0)) {
 
                 foreach (MeshRenderer ren in normalMesh.GetComponentsInChildren<MeshRenderer>()) {
                     ren.material = matGreen;
-                }
-                mouseDown = true;
+                }                
             }
+
             if (Input.GetMouseButtonUp(0)) {
 
                 foreach (MeshRenderer ren in normalMesh.GetComponentsInChildren<MeshRenderer>()) {
                     ren.material = matBlack;
                 }
-                mouseDown = false;
             }
         }
     }
@@ -78,7 +79,7 @@ public class Crosshair : MonoBehaviour {
 
             var mousePos = Input.mousePosition;                        
             mousePos.z = distanceFromCamera;                     
-            mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);            
+            mousePos = camera.ScreenToWorldPoint(mousePos);            
 
             if (Vector3.Distance(mousePos, lastMousePosition) > 12) {
                 minMoveDistance = _MINMOVEDISTANCE;
@@ -98,7 +99,7 @@ public class Crosshair : MonoBehaviour {
 
             if (!topDown) {
 
-                transform.rotation = Manager.rea.transform.rotation;
+                transform.rotation = Manager.user.body.transform.rotation;
             }
         }
         else if (activated && selectorActivated) {
@@ -112,7 +113,7 @@ public class Crosshair : MonoBehaviour {
 
         if (!activated) {
 
-            Manager.currentCrosshair = this;
+            Manager.user.activeCrosshairs.Add(this);
 
             activated = true;
 
@@ -122,7 +123,7 @@ public class Crosshair : MonoBehaviour {
 
             var mousePos = Input.mousePosition;
             mousePos.z = distanceFromCamera;
-            mousePos = Manager.currentCamera.ScreenToWorldPoint(mousePos);    
+            mousePos = camera.ScreenToWorldPoint(mousePos);    
 
             transform.position = mousePos;
         }
@@ -132,9 +133,11 @@ public class Crosshair : MonoBehaviour {
 
         if (activated) {
 
+            Manager.user.activeCrosshairs.Remove(this);
+
             activated = false;
             foreach (MeshRenderer ren in GetComponentsInChildren<MeshRenderer>()) {
-                ren.enabled = false;
+               // ren.enabled = false;
             }
         }
     }
@@ -173,54 +176,4 @@ public class Crosshair : MonoBehaviour {
         normalMesh.SetActive(true);
         selectorMesh.SetActive(false);
     }
-
-    public Material lineMaterial;
-
-    void CreateLineMaterial() {
-
-        if (!lineMaterial) {
-            // Unity has a built-in shader that is useful for drawing
-            // simple colored things.
-            Shader shader = Shader.Find("Hidden/Internal-Colored");
-            lineMaterial = new Material(shader);
-            lineMaterial.hideFlags = HideFlags.HideAndDontSave;
-            // Turn on alpha blending
-            lineMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            lineMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            // Turn backface culling off
-            lineMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
-            // Turn off depth writes
-            lineMaterial.SetInt("_ZWrite", 0);
-        }
-    }
-
-    void DrawConnectingLines() {
-
-        if (!lineMaterial) {
-            Debug.LogError("Please Assign a material on the inspector");
-            return;
-        }
-
-        GL.Begin(GL.LINES);
-        lineMaterial.SetPass(0);
-        GL.Color(Color.black);
-        GL.Vertex3(transform.position.x, transform.position.y, transform.position.z);
-        GL.Vertex3(Manager.rea.transform.position.x, Manager.rea.transform.position.y, Manager.rea.transform.position.z);
-        GL.End();
-        
-    }
-
-    void OnPostRender() {
-        
-        if (mouseDown)
-            DrawConnectingLines();
-    }
-
-    // To show the lines in the editor
-    void OnDrawGizmos() {
-        
-        if (mouseDown)
-            DrawConnectingLines();
-    }
-
 }

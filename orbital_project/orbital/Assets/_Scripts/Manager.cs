@@ -7,14 +7,12 @@ using System.Text.RegularExpressions;
 public class Manager : MonoBehaviour {
 
     
-    public static Rea rea;
+    public static User user;
 
     public static Camera worldUICamera;
     public static WorldUI worldUI;
 
     public static Camera currentCamera;
-
-    public static Crosshair currentCrosshair;
 
     public static Manager manager;
 

@@ -61,7 +61,9 @@ public class Follower : MonoBehaviour {
     Vector3 _direction;
 
     Quaternion rotationTowardsTarget;    
-    new Rigidbody rigidbody;
+    Rigidbody rigidbodyComponent;
+    
+
 
 
     void Awake() {
@@ -71,9 +73,9 @@ public class Follower : MonoBehaviour {
             lineRenderer.material = matLineRed;
 
         targetPosition = Vector3.zero;
-        rigidbody = GetComponent<Rigidbody>();
+        rigidbodyComponent = GetComponent<Rigidbody>();
     }
-
+    
     void Start() {
 
         followerName = (Manager.nameList[Random.Range(0, Manager.nameList.Count)]);
@@ -97,7 +99,7 @@ public class Follower : MonoBehaviour {
 
 
             if (showName) {
-                var targetVector = (nameHolder.transform.position - Manager.rea.transform.position).normalized;
+                var targetVector = (nameHolder.transform.position - Manager.user.body.transform.position).normalized;
                 var rotationTarget = Quaternion.LookRotation(-targetVector);
                 nameHolder.transform.rotation = Quaternion.Slerp(nameHolder.transform.rotation, rotationTarget, Time.deltaTime * turnSpeed);
             }
@@ -131,7 +133,7 @@ public class Follower : MonoBehaviour {
             }
 
             if (canMove && thrusting) {
-                rigidbody.drag = moveDrag;
+                rigidbodyComponent.drag = moveDrag;
         
                 if (!making) 
                     StartCoroutine("make");
@@ -142,11 +144,11 @@ public class Follower : MonoBehaviour {
 
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotationTarget, Time.deltaTime * turnSpeed);
             
-                rigidbody.AddForce(transform.forward * moveSpeed);
+                rigidbodyComponent.AddForce(transform.forward * moveSpeed);
             }        
             else {
 
-                rigidbody.drag = driftDrag;
+                rigidbodyComponent.drag = driftDrag;
 
                 StopCoroutine("make");
                 making = false;
@@ -167,7 +169,7 @@ public class Follower : MonoBehaviour {
 
     void OnMouseEnter() {
 
-        if (Vector3.Distance(Manager.rea.transform.position, transform.position) > 50) {
+        if (Vector3.Distance(Manager.user.body.transform.position, transform.position) > 50) {
 
             var mousePos = Input.mousePosition;
             mousePos.z = Vector3.Distance(transform.position, Manager.currentCamera.transform.position);
@@ -176,7 +178,7 @@ public class Follower : MonoBehaviour {
 
             if (showName) displayName();
             hoverActive = true;
-            Manager.rea.followerHover(this);
+            Manager.user.followerHover(this);
         }
     }
 
@@ -184,7 +186,7 @@ public class Follower : MonoBehaviour {
 
         clearName();
         hoverActive = false;
-        Manager.rea.followerHoverExit();
+        Manager.user.followerHoverExit();
     }
 
     public void activate() {
@@ -202,7 +204,7 @@ public class Follower : MonoBehaviour {
                 Manager.pointsOfInterest.Remove(gameObject);
 
             lineRenderer.SetVertexCount(2);
-            target = Manager.rea.gameObject;
+            target = Manager.user.gameObject;
         }
         
     }

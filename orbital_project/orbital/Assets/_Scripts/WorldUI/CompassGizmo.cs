@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class Compass : MonoBehaviour {
+public class CompassGizmo : MonoBehaviour {
 
     public float turnSpeed = 1;
 
@@ -15,7 +15,7 @@ public class Compass : MonoBehaviour {
 
     void Update() {
         
-        var targetVector = Manager.rea.transform.forward;
+        var targetVector = Manager.user.body.transform.forward;
         var rotationTarget = Quaternion.LookRotation(targetVector);
 
         cone.transform.rotation = Quaternion.Slerp(cone.transform.rotation, rotationTarget, Time.deltaTime * turnSpeed);
@@ -25,7 +25,7 @@ public class Compass : MonoBehaviour {
 
     public void Toggle() {
 
-        Manager.rea.resetRotation();
+        Manager.user.resetRotation();
     }
 
 }

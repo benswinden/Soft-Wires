@@ -4,10 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class FPCamGizmo : MonoBehaviour {
+public class CameraGizmo : MonoBehaviour {
 
     public Material matBlack;
     public Material matGreen;
+
+    public GameObject cameraDisplay;
 
     public List<MeshRenderer> thingsToChangeColor;
 
@@ -24,18 +26,22 @@ public class FPCamGizmo : MonoBehaviour {
     }
 
     void Start() {
-        Manager.rea.fpGizmo = this;
+        Manager.user.fpGizmo = this;
     }
 
 
     void Update() {
 
+        // Waiting for toggle animation to finish
         if (animating && !animation.isPlaying) {
+
             animating = false;
 
             if (activated) {
 
-                Manager.rea.toggleMode();
+                Manager.user.toggleMode();
+                cameraDisplay.SetActive(true);
+
 
                 foreach (MeshRenderer obj in thingsToChangeColor) {
 
@@ -48,8 +54,7 @@ public class FPCamGizmo : MonoBehaviour {
 
     public void Toggle() {
         
-        if (!animating) {
-            
+            // TURN OFF
             if (activated) {
                 
                 foreach (MeshRenderer obj in thingsToChangeColor) {
@@ -58,21 +63,26 @@ public class FPCamGizmo : MonoBehaviour {
                 }
                 
                 activated = false;
+
                 animation["Giz_FPCam_Activate"].speed = -1;
-                animation["Giz_FPCam_Activate"].time = animation["Giz_FPCam_Activate"].length;
-                animation.Play();
+                if (!animation.isPlaying) {
+                    animation["Giz_FPCam_Activate"].time = animation["Giz_FPCam_Activate"].length;
+                    animation.Play();
+                }
                 animating = true;
 
-                if (Manager.rea.FPMode)
-                    Manager.rea.toggleMode();
+                cameraDisplay.SetActive(false);
+
+                if (Manager.user.FPMode)
+                    Manager.user.toggleMode();
             }
+            // TURN ON
             else {
 
                 activated = true;
                 animation["Giz_FPCam_Activate"].speed = 1;
-                animation.Play();
+                if (!animation.isPlaying) animation.Play();
                 animating = true;
-            }
-        }
+            }        
     }
 }

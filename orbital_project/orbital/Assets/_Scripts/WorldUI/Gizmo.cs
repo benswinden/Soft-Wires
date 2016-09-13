@@ -62,7 +62,7 @@ public class Gizmo : MonoBehaviour {
         Manager.worldUI.selectionHover(gameObject);
 
         hoverActive = true;
-        Manager.rea.gizmoHover(gameObject);
+        Manager.user.gizmoHover(gameObject);
     }
 
     public void hoverExit() {
@@ -73,7 +73,7 @@ public class Gizmo : MonoBehaviour {
         Manager.worldUI.selectionHoverExit();
 
         hoverActive = false;
-        Manager.rea.gizmoHoverExit();
+        Manager.user.gizmoHoverExit();
     }
 
 }

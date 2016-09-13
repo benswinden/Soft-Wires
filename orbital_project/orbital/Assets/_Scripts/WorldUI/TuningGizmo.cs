@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class Tuning : MonoBehaviour {
+public class TuningGizmo : MonoBehaviour {
 
 
     public Material matBlack;
@@ -32,15 +32,15 @@ public class Tuning : MonoBehaviour {
 
         if (activated && closest != null) {
 
-            Vector3 vec = (closest.transform.position - Manager.rea.transform.position).normalized;
-            Vector3 target = Manager.rea.transform.position + (vec * distanceFromPlayer);
+            Vector3 vec = (closest.transform.position - Manager.user.body.transform.position).normalized;
+            Vector3 target = Manager.user.body.transform.position + (vec * distanceFromPlayer);
 
             //Debug.DrawLine(Manager.rea.transform.position, target, Color.cyan);
 
             sphere.transform.position = target;
 
             lineRenderer.SetPosition(0, sphere.transform.position);
-            lineRenderer.SetPosition(1, Manager.rea.transform.position);
+            lineRenderer.SetPosition(1, Manager.user.body.transform.position);
 
         }
         else if (activated && closest == null) {
@@ -74,7 +74,7 @@ public class Tuning : MonoBehaviour {
 
             lineRenderer.SetVertexCount(2);
             lineRenderer.SetPosition(0, sphere.transform.position);
-            lineRenderer.SetPosition(1, Manager.rea.transform.position);
+            lineRenderer.SetPosition(1, Manager.user.body.transform.position);
 
             sphere.SetActive(true);
         }

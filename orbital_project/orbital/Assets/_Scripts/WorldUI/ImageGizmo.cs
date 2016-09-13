@@ -71,8 +71,8 @@ public class ImageGizmo : MonoBehaviour {
         }
         else {
 
-            if (Manager.rea.FPMode)
-                Manager.rea.toggleMode();
+            if (Manager.user.FPMode)
+                Manager.user.toggleMode();
 
             foreach (MeshRenderer obj in thingsToChangeColor) {
 

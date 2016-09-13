@@ -22,6 +22,7 @@ public class WorldUI : MonoBehaviour {
         Manager.worldUI = this;
     }
 
+    // Use this to add a gizmo into the UI
     public bool addGizmo(Gizmo gizmo) {
 
         List<UISlot> emptySlots = new List<UISlot>();

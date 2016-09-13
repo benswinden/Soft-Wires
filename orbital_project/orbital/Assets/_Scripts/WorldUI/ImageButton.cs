@@ -73,7 +73,7 @@ public class ImageButton : MonoBehaviour {
             imageUI.selectionHover(gameObject);
 
             hoverActive = true;
-            Manager.rea.gizmoHover(gameObject);
+            Manager.user.gizmoHover(gameObject);
         }
     }
 
@@ -84,7 +84,7 @@ public class ImageButton : MonoBehaviour {
             imageUI.selectionHoverExit();
 
             hoverActive = false;
-            Manager.rea.gizmoHoverExit();
+            Manager.user.gizmoHoverExit();
         }
     }
 

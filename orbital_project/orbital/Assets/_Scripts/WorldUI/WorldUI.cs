@@ -13,7 +13,6 @@ public class WorldUI : MonoBehaviour {
 
     public WorldImageHolder worldImageHolder;
 
-    bool hovering;
     GameObject currentGizmoHover;
 
 
@@ -79,13 +78,11 @@ public class WorldUI : MonoBehaviour {
     public void selectionHover(GameObject gizmo) {
         
         selector.SetActive(true);
-        selector.transform.position = gizmo.transform.position;
-        hovering = true;
+        selector.transform.position = gizmo.transform.position;        
     }
 
     public void selectionHoverExit() {
         
-        selector.SetActive(false);
-        hovering = false;
+        selector.SetActive(false);        
     }
 }

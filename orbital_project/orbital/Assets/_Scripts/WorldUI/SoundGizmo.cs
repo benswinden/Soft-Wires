@@ -13,7 +13,7 @@ public class SoundGizmo : MonoBehaviour {
 
     public List<MeshRenderer> thingsToChangeColor;
 
-    Animation animation;    
+    Animation _animation;    
 
     public bool activated { get; set; }
 
@@ -21,14 +21,14 @@ public class SoundGizmo : MonoBehaviour {
 
     void Awake() {
 
-        animation = GetComponent<Animation>();
+        _animation = GetComponent<Animation>();
     }
 
     void Start() {
 
-        if (animation) {
-            animationName = animation.clip.name;
-            animation[animationName].speed = 0;
+        if (_animation) {
+            animationName = _animation.clip.name;
+            _animation[animationName].speed = 0;
         }
 
         if (startActivated)
@@ -50,8 +50,8 @@ public class SoundGizmo : MonoBehaviour {
            
             activated = false;
             
-            if (animation)
-                animation[animationName].speed = 0;            
+            if (_animation)
+                _animation[animationName].speed = 0;            
         }
         else {
 
@@ -62,8 +62,8 @@ public class SoundGizmo : MonoBehaviour {
 
             activated = true;
 
-            if (animation)
-                animation[animationName].speed = 1;            
+            if (_animation)
+                _animation[animationName].speed = 1;            
         }        
     }
 }

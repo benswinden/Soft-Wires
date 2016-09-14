@@ -23,7 +23,6 @@ public class ImageButton : MonoBehaviour {
 
     Vector3 startMousePosition;
     bool hoverActive;
-    bool waiting = true;
     bool broughtToLife;
 
 

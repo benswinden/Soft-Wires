@@ -18,7 +18,7 @@ public class Crosshair : MonoBehaviour {
 
     public bool topDown;
 
-    public Camera camera;               // The camera associated with this crosshair
+    public Camera attachedCamera;               // The camera associated with this crosshair
 
     public GameObject normalMesh;
     public GameObject selectorMesh;
@@ -79,7 +79,7 @@ public class Crosshair : MonoBehaviour {
 
             var mousePos = Input.mousePosition;                        
             mousePos.z = distanceFromCamera;                     
-            mousePos = camera.ScreenToWorldPoint(mousePos);            
+            mousePos = attachedCamera.ScreenToWorldPoint(mousePos);            
 
             if (Vector3.Distance(mousePos, lastMousePosition) > 12) {
                 minMoveDistance = _MINMOVEDISTANCE;
@@ -89,6 +89,7 @@ public class Crosshair : MonoBehaviour {
                     minMoveDistance -= 1;
             }
 
+            print("distance from cam: " + Vector3.Distance(transform.position, attachedCamera.transform.position) + "    player dist: " + Vector3.Distance(Manager.user.body.transform.position, attachedCamera.transform.position));
 
             lastMousePosition = mousePos;
 
@@ -123,7 +124,7 @@ public class Crosshair : MonoBehaviour {
 
             var mousePos = Input.mousePosition;
             mousePos.z = distanceFromCamera;
-            mousePos = camera.ScreenToWorldPoint(mousePos);    
+            mousePos = attachedCamera.ScreenToWorldPoint(mousePos);    
 
             transform.position = mousePos;
         }
@@ -135,17 +136,13 @@ public class Crosshair : MonoBehaviour {
 
             Manager.user.activeCrosshairs.Remove(this);
 
-            activated = false;
-            foreach (MeshRenderer ren in GetComponentsInChildren<MeshRenderer>()) {
-               // ren.enabled = false;
-            }
+            activated = false;            
         }
     }
 
-    Vector3 lastPosition;
     GameObject hoveringFollower;
 
-    public void deactivateCursor() {
+    public void deactivateCursor() { 
 
         activated = false;        
         normalMesh.SetActive(false);
@@ -162,7 +159,6 @@ public class Crosshair : MonoBehaviour {
         hoveringFollower = follower;
         rigidbody.velocity = Vector3.zero;
 
-        lastPosition = transform.position;
         transform.position = follower.transform.position;
         selectorActivated = true;
         normalMesh.SetActive(false);
@@ -171,7 +167,7 @@ public class Crosshair : MonoBehaviour {
 
     public void selectorInactive() {
 
-        //transform.position = lastPosition;
+        
         selectorActivated = false;
         normalMesh.SetActive(true);
         selectorMesh.SetActive(false);

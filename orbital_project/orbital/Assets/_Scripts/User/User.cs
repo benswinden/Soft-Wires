@@ -30,7 +30,6 @@ public class User : MonoBehaviour {
 
     bool hovering;
     GameObject hoveringFollower;
-    GameObject hoveringGizmo;
 
     bool grappleShot;    
 
@@ -105,15 +104,20 @@ public class User : MonoBehaviour {
             if (overDisplay) {
                 
                 var targetVector = (frontCrosshair.transform.position - body.transform.position).normalized;
-                var rotationTarget = Quaternion.LookRotation(targetVector);
+                var rotationTarget = Quaternion.LookRotation(targetVector); 
 
                 body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTarget, Time.deltaTime * FPturnSpeed);
             }
             // Normal Top down rotation
             else {
 
-                rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(topCrosshair.transform.position.z - body.transform.position.z, topCrosshair.transform.position.x - body.transform.position.x) * 180 / Mathf.PI - 90, -body.transform.up);
-                body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);                                
+                //rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(topCrosshair.transform.position.z - body.transform.position.z, topCrosshair.transform.position.x - body.transform.position.x) * 180 / Mathf.PI - 90, -body.transform.up);
+                //body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);
+
+                var newRotation = Quaternion.LookRotation(topCrosshair.transform.position - body.transform.position, body.transform.up);
+                //newRotation.x = 0.0f;
+                //newRotation.z = 0.0f;
+                body.transform.rotation = Quaternion.Slerp(body.transform.rotation, newRotation, Time.deltaTime * TDturnSpeed);
             }            
 
             bodyRigidbody.AddForce(body.transform.forward * moveSpeed);
@@ -192,7 +196,7 @@ public class User : MonoBehaviour {
     public void resetRotation() {
 
         body.transform.rotation = Quaternion.LookRotation(Vector3.forward);
-        topCamera.transform.position = body.transform.position + (transform.up * 1000);
+        topCamera.transform.position = body.transform.position + (body.transform.up * 1000);
         topCamera.transform.rotation = body.transform.rotation;
         topCamera.transform.Rotate(new Vector3(90, 0, 0));
 
@@ -202,7 +206,6 @@ public class User : MonoBehaviour {
 
     public void gizmoHover(GameObject gizmo) {
 
-        hoveringGizmo = gizmo;        
         hovering = true;
 
         foreach (Crosshair crosshair in activeCrosshairs)
@@ -211,7 +214,6 @@ public class User : MonoBehaviour {
 
     public void gizmoHoverExit() {
 
-        hoveringGizmo = null;        
         hovering = false;
 
         foreach (Crosshair crosshair in activeCrosshairs)

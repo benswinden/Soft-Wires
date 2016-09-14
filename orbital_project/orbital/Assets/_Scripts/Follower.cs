@@ -55,7 +55,6 @@ public class Follower : MonoBehaviour {
 
     bool thrusting;
     GameObject target;
-    Vector3 targetPosition;
     
     Quaternion _lookRotation;
     Vector3 _direction;
@@ -72,7 +71,6 @@ public class Follower : MonoBehaviour {
         if (corrupt)
             lineRenderer.material = matLineRed;
 
-        targetPosition = Vector3.zero;
         rigidbodyComponent = GetComponent<Rigidbody>();
     }
     

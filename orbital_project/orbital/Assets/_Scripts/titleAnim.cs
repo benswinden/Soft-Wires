@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,6 +44,7 @@ public class titleAnim : MonoBehaviour {
 
         yield return new WaitForSeconds(6);
 
-        Application.LoadLevel(1);
+
+        SceneManager.LoadScene(1);        
     }
 }

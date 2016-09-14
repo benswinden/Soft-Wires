@@ -19,7 +19,7 @@ public class ImageGizmo : MonoBehaviour {
 
     public Sprite image;
 
-    Animation animation;    
+    Animation _animation;    
 
     public bool activated { get; set; }
 
@@ -29,7 +29,7 @@ public class ImageGizmo : MonoBehaviour {
 
     void Awake() {
 
-        animation = GetComponent<Animation>();
+        _animation = GetComponent<Animation>();
     }
 
     void Start() {
@@ -38,9 +38,9 @@ public class ImageGizmo : MonoBehaviour {
             image = possibleImages[Random.Range(0, possibleImages.Count)];
 
 
-        if (animation) {
-            animationName = animation.clip.name;
-            animation[animationName].speed = 1;
+        if (_animation) {
+            animationName = _animation.clip.name;
+            _animation[animationName].speed = 1;
         }
 
         if (startActivated)
@@ -87,8 +87,8 @@ public class ImageGizmo : MonoBehaviour {
 
             StartCoroutine("wait");
 
-            if (animation)
-                animation.Stop();
+            if (_animation)
+                _animation.Stop();
         }        
     }
 

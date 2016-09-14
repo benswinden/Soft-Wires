@@ -16,15 +16,7 @@ public class WorldImageHolder : MonoBehaviour {
     public ImageUI imageUI;
 
     ImageButton targetButton;
-
-    bool activated;
-
-    void Update() {
-
-        if (activated) {
-
-        }
-    }
+    
 
     public void startAnimation(int imageNum) {
 

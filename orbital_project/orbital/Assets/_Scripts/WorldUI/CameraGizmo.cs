@@ -13,7 +13,7 @@ public class CameraGizmo : MonoBehaviour {
 
     public List<MeshRenderer> thingsToChangeColor;
 
-    Animation animation;
+    Animation _animation;
     bool animating;
 
     public bool activated { get; set; }
@@ -22,7 +22,7 @@ public class CameraGizmo : MonoBehaviour {
     void Awake() {
 
         
-        animation = GetComponent<Animation>();
+        _animation = GetComponent<Animation>();
     }
 
     void Start() {
@@ -33,7 +33,7 @@ public class CameraGizmo : MonoBehaviour {
     void Update() {
 
         // Waiting for toggle animation to finish
-        if (animating && !animation.isPlaying) {
+        if (animating && !_animation.isPlaying) {
 
             animating = false;
 
@@ -64,10 +64,10 @@ public class CameraGizmo : MonoBehaviour {
                 
                 activated = false;
 
-                animation["Giz_FPCam_Activate"].speed = -1;
-                if (!animation.isPlaying) {
-                    animation["Giz_FPCam_Activate"].time = animation["Giz_FPCam_Activate"].length;
-                    animation.Play();
+                _animation["Giz_FPCam_Activate"].speed = -1;
+                if (!_animation.isPlaying) {
+                    _animation["Giz_FPCam_Activate"].time = _animation["Giz_FPCam_Activate"].length;
+                    _animation.Play();
                 }
                 animating = true;
 
@@ -80,8 +80,8 @@ public class CameraGizmo : MonoBehaviour {
             else {
 
                 activated = true;
-                animation["Giz_FPCam_Activate"].speed = 1;
-                if (!animation.isPlaying) animation.Play();
+                _animation["Giz_FPCam_Activate"].speed = 1;
+                if (!_animation.isPlaying) _animation.Play();
                 animating = true;
             }        
     }

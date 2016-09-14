@@ -98,7 +98,7 @@ public class ImageGizmo : MonoBehaviour {
 
         GetComponent<Gizmo>().hoverExit();
         Manager.worldUI.removeGizmo(GetComponent<Gizmo>());
-        GetComponent<Gizmo>().follower.GetComponent<Follower>().kill();
+
     }
 
     void OnDisable() {

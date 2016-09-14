@@ -162,13 +162,15 @@
     <Compile Include="Assets\Yarn Spinner\Examples\Demo Scripts\NPC.cs" />
     <Compile Include="Assets\Yarn Spinner\Examples\Demo Scripts\PlayerCharacter.cs" />
     <Compile Include="Assets\Yarn Spinner\Examples\Demo Scripts\SpriteSwitcher.cs" />
-    <Compile Include="Assets\_Scripts\CameraMove.cs" />
+    <Compile Include="Assets\_Scripts\Body.cs" />
+    <Compile Include="Assets\_Scripts\CameraGlitch.cs" />
+    <Compile Include="Assets\_Scripts\CameraMoveFront.cs" />
+    <Compile Include="Assets\_Scripts\CameraMoveTop.cs" />
     <Compile Include="Assets\_Scripts\Crosshair.cs" />
     <Compile Include="Assets\_Scripts\Debug\FPSLight.cs" />
     <Compile Include="Assets\_Scripts\Entity.cs" />
     <Compile Include="Assets\_Scripts\FadeIn.cs" />
     <Compile Include="Assets\_Scripts\FadeOut.cs" />
-    <Compile Include="Assets\_Scripts\Follower.cs" />
     <Compile Include="Assets\_Scripts\Grapple.cs" />
     <Compile Include="Assets\_Scripts\Grid.cs" />
     <Compile Include="Assets\_Scripts\Manager.cs" />

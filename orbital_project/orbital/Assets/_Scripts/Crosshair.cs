@@ -89,8 +89,6 @@ public class Crosshair : MonoBehaviour {
                     minMoveDistance -= 1;
             }
 
-            print("distance from cam: " + Vector3.Distance(transform.position, attachedCamera.transform.position) + "    player dist: " + Vector3.Distance(Manager.user.body.transform.position, attachedCamera.transform.position));
-
             lastMousePosition = mousePos;
 
             if (Vector3.Distance(mousePos, transform.position) > minMoveDistance) {
@@ -100,7 +98,7 @@ public class Crosshair : MonoBehaviour {
 
             if (!topDown) {
 
-                transform.rotation = Manager.user.body.transform.rotation;
+                transform.rotation = Manager.user.currentBody.transform.rotation;
             }
         }
         else if (activated && selectorActivated) {

@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 
 public class Gizmo : MonoBehaviour {
-    
-    public GameObject follower;
 
-    public GameObject slot { get; set; }
+
+    public int slot;
+    public Transform parent;
 
     bool hoverActive;
 
@@ -17,14 +17,19 @@ public class Gizmo : MonoBehaviour {
 
     public LineRenderer lineRen;
 
+    void Awake() {
+
+        parent = transform.parent;
+    }
+
     void Update() {
 
         if (hoverActive) {
 
-            if (lineRen != null && follower != null) {                
-                lineRen.SetPosition(0,  Manager.currentCamera.ScreenToWorldPoint( Manager.worldUICamera.WorldToScreenPoint(lineRen.transform.position)));
-                lineRen.SetPosition(1, follower.transform.position);
-            }
+            //if (lineRen != null && follower != null) {                
+            //    lineRen.SetPosition(0,  Manager.currentCamera.ScreenToWorldPoint( Manager.worldUICamera.WorldToScreenPoint(lineRen.transform.position)));
+            //    lineRen.SetPosition(1, follower.transform.position);
+            //}
 
 
             var mousePos = Input.mousePosition;
@@ -46,12 +51,6 @@ public class Gizmo : MonoBehaviour {
 
     void OnMouseEnter() {
 
-        if (lineRen != null && follower != null) {
-            lineRen.SetVertexCount(2);
-            lineRen.SetPosition(0, Manager.currentCamera.ScreenToWorldPoint(Manager.worldUICamera.WorldToScreenPoint(lineRen.transform.position)));
-            lineRen.SetPosition(1, follower.transform.position);
-        }
-
 
         var mousePos = Input.mousePosition;
         mousePos.z = Vector3.Distance(transform.position, Manager.worldUICamera.transform.position);
@@ -66,9 +65,6 @@ public class Gizmo : MonoBehaviour {
     }
 
     public void hoverExit() {
-
-        if (follower != null && lineRen != null)
-            lineRen.SetVertexCount(0);
 
         Manager.worldUI.selectionHoverExit();
 

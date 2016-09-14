@@ -32,15 +32,15 @@ public class TuningGizmo : MonoBehaviour {
 
         if (activated && closest != null) {
 
-            Vector3 vec = (closest.transform.position - Manager.user.body.transform.position).normalized;
-            Vector3 target = Manager.user.body.transform.position + (vec * distanceFromPlayer);
+            Vector3 vec = (closest.transform.position - Manager.user.currentBody.transform.position).normalized;
+            Vector3 target = Manager.user.currentBody.transform.position + (vec * distanceFromPlayer);
 
             //Debug.DrawLine(Manager.rea.transform.position, target, Color.cyan);
 
             sphere.transform.position = target;
 
             lineRenderer.SetPosition(0, sphere.transform.position);
-            lineRenderer.SetPosition(1, Manager.user.body.transform.position);
+            lineRenderer.SetPosition(1, Manager.user.currentBody.transform.position);
 
         }
         else if (activated && closest == null) {
@@ -74,7 +74,7 @@ public class TuningGizmo : MonoBehaviour {
 
             lineRenderer.SetVertexCount(2);
             lineRenderer.SetPosition(0, sphere.transform.position);
-            lineRenderer.SetPosition(1, Manager.user.body.transform.position);
+            lineRenderer.SetPosition(1, Manager.user.currentBody.transform.position);
 
             sphere.SetActive(true);
         }

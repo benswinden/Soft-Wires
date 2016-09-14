@@ -15,7 +15,7 @@ public class CompassGizmo : MonoBehaviour {
 
     void Update() {
         
-        var targetVector = Manager.user.body.transform.forward;
+        var targetVector = Manager.user.currentBody.transform.forward;
         var rotationTarget = Quaternion.LookRotation(targetVector);
 
         cone.transform.rotation = Quaternion.Slerp(cone.transform.rotation, rotationTarget, Time.deltaTime * turnSpeed);

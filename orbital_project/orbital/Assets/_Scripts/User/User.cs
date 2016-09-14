@@ -17,31 +17,32 @@ public class User : MonoBehaviour {
     public float grappleShotForce = 1000;
 
 
-    [Header("Containers")]
-    public GameObject body;
+    [Header("Containers")]    
     public GameObject grapple;    
-    public Camera topCamera;
-    public Camera frontCamera;    
+    public CameraMoveTop topCamera;
+    public CameraMoveFront frontCamera;    
     public GameObject topCrosshair;
     public GameObject frontCrosshair;    
 
     [Space]
     public bool debug;
 
+
+    // Private
+
     bool hovering;
-    GameObject hoveringFollower;
+    GameObject hoveringBody;
 
-    bool grappleShot;    
-
-    List<GameObject> followerList = new List<GameObject>();
+    bool grappleShot;        
 
     Quaternion _lookRotation;
     Vector3 _direction;
 
     Quaternion rotationTowardsTarget;    
-    Rigidbody bodyRigidbody;
     
     // Properties
+    public Body currentBody { get; set; }
+
     public bool FPMode { get; set; }
     public CameraGizmo fpGizmo { get; set; }
 
@@ -51,19 +52,24 @@ public class User : MonoBehaviour {
     void Awake() {
 
         Manager.user = this;
-        Manager.currentCamera = topCamera;
-
-        bodyRigidbody = body.GetComponent<Rigidbody>();
+        Manager.currentCamera = topCamera.actualCamera;
 
         activeCrosshairs = new List<Crosshair>();
+
+        // Check for our body
+        foreach (Transform child in transform) {
+
+            if (child.GetComponent<Body>())
+                switchBody(child.GetComponent<Body>());
+        }
     }
 
     void Update() {
 
         if (debug) {
-            Debug.DrawRay(body.transform.position, body.transform.forward * 1000, Color.blue);
-            Debug.DrawRay(body.transform.position, body.transform.up * 1000, Color.green);
-            Debug.DrawRay(body.transform.position, body.transform.right * 1000, Color.red);
+            Debug.DrawRay(currentBody.transform.position, currentBody.transform.forward * 1000, Color.blue);
+            Debug.DrawRay(currentBody.transform.position, currentBody.transform.up * 1000, Color.green);
+            Debug.DrawRay(currentBody.transform.position, currentBody.transform.right * 1000, Color.red);
         }
 
     }
@@ -87,26 +93,26 @@ public class User : MonoBehaviour {
             if (hit.collider.tag.Equals("CameraDisplay")) {
 
                 overDisplay = true;
-                Manager.currentCamera = frontCamera;                
+                Manager.currentCamera = frontCamera.actualCamera;                
             }
         }
         else {
             
-            Manager.currentCamera = topCamera;            
+            Manager.currentCamera = topCamera.actualCamera;            
         }
 
         if (Input.GetMouseButton(0) && !hovering) {
 
-            bodyRigidbody.drag = moveDrag;
+            currentBody.GetComponent<Rigidbody>().drag = moveDrag;
 
             
             // Mouse is hovering over a display, so rotate us based on that ( For now just FP, would need to be adapted to support different cameras
             if (overDisplay) {
-                
-                var targetVector = (frontCrosshair.transform.position - body.transform.position).normalized;
-                var rotationTarget = Quaternion.LookRotation(targetVector); 
 
-                body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTarget, Time.deltaTime * FPturnSpeed);
+                var targetVector = (frontCrosshair.transform.position - currentBody.transform.position).normalized;
+                var rotationTarget = Quaternion.LookRotation(targetVector);
+
+                currentBody.transform.rotation = Quaternion.Slerp(currentBody.transform.rotation, rotationTarget, Time.deltaTime * FPturnSpeed);
             }
             // Normal Top down rotation
             else {
@@ -114,29 +120,21 @@ public class User : MonoBehaviour {
                 //rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(topCrosshair.transform.position.z - body.transform.position.z, topCrosshair.transform.position.x - body.transform.position.x) * 180 / Mathf.PI - 90, -body.transform.up);
                 //body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);
 
-                var newRotation = Quaternion.LookRotation(topCrosshair.transform.position - body.transform.position, body.transform.up);
+                var newRotation = Quaternion.LookRotation(topCrosshair.transform.position - currentBody.transform.position, currentBody.transform.up);
                 //newRotation.x = 0.0f;
                 //newRotation.z = 0.0f;
-                body.transform.rotation = Quaternion.Slerp(body.transform.rotation, newRotation, Time.deltaTime * TDturnSpeed);
-            }            
+                currentBody.transform.rotation = Quaternion.Slerp(currentBody.transform.rotation, newRotation, Time.deltaTime * TDturnSpeed);
+            }
 
-            bodyRigidbody.AddForce(body.transform.forward * moveSpeed);
+            currentBody.GetComponent<Rigidbody>().AddForce(currentBody.transform.forward * moveSpeed);
 
         }
         else if (Input.GetMouseButtonDown(0) && hovering) {
 
             // FOLLOWER HOVER
-            if (hoveringFollower != null) {
+            if (hoveringBody != null) {
                 
-                if (followerList.Contains(hoveringFollower)) {
-
-                    hoveringFollower.GetComponent<Follower>().deactivate();
-                    followerList.Remove(hoveringFollower);
-
-                    //Manager.currentCrosshair.selectorInactive();
-                }
-                else
-                    shootGrapple();
+                shootGrapple();
             }
             // GIZMO HOVER
             else {
@@ -146,21 +144,69 @@ public class User : MonoBehaviour {
         }
         else {
 
-            bodyRigidbody.drag = driftDrag;
+            currentBody.GetComponent<Rigidbody>().drag = driftDrag;
 
         }                
     }
 
+
+
+
+    public void switchBody(Body newBody) {
+        
+
+        if (currentBody != null) {
+
+            Manager.worldUICamera.GetComponent<CameraGlitch>().startGlitch(0.2f);
+
+            currentBody.transform.parent = null;
+            currentBody.GetComponent<Body>().deactivate();
+        }
+
+        newBody.activate();
+        newBody.transform.parent = transform;
+        currentBody = newBody;
+
+        // Remove all gizmos
+        Manager.worldUI.removeAllGizmos();
+
+
+        // Add gizmos
+        List<Gizmo> gizmoList = new List<Gizmo>();
+        foreach (Transform child in currentBody.transform) {            
+
+            if (child.GetComponent<Gizmo>()) {
+
+                // Have to add these to a list to use outside of the loop since their transforms get moved which fucks up the loop
+                gizmoList.Add(child.GetComponent<Gizmo>());                
+            }
+        }
+
+        foreach (Gizmo giz in gizmoList) {
+
+            Manager.worldUI.addGizmo(giz, giz.slot);
+        }
+
+        frontCamera.GetComponentInParent<CameraMoveFront>().userBody = currentBody.gameObject;
+        topCamera.GetComponentInParent<CameraMoveTop>().userBody = currentBody.gameObject;
+
+        resetRotation();
+    }
+
+
+
+
+
     public void toggleMode() {
 
 
-        if (hoveringFollower != null) {
+        if (hoveringBody != null) {
 
             foreach (Crosshair crosshair in activeCrosshairs)
                 crosshair.selectorInactive();
 
             hovering = false;
-            hoveringFollower.GetComponent<Follower>().hoverExit();
+            hoveringBody.GetComponent<Body>().hoverExit();
         }
 
         if (FPMode) {
@@ -168,24 +214,21 @@ public class User : MonoBehaviour {
             if (fpGizmo.activated)
                 fpGizmo.Toggle();
 
-            topCamera.transform.position = body.transform.position + (body.transform.up * 1000);
-            topCamera.transform.rotation = body.transform.rotation;
-            topCamera.transform.Rotate(new Vector3(90, 0, 0));
+            topCamera.resetRotation();
 
-            FPMode = false;
-            topCamera.enabled = true;
-            frontCamera.enabled = false;            
+            FPMode = false;            
+            frontCamera.actualCamera.enabled = false;            
 
             //TDCrosshair.GetComponent<Crosshair>().activate();
-            topCrosshair.transform.rotation = body.transform.rotation;
+            topCrosshair.transform.rotation = currentBody.transform.rotation;
             frontCrosshair.GetComponent<Crosshair>().deactivate();
         }
         else {
 
-            Manager.currentCamera = frontCamera;
+            Manager.currentCamera = frontCamera.actualCamera;
 
             FPMode = true;            
-            frontCamera.enabled = true;            
+            frontCamera.actualCamera.enabled = true;            
 
             //TDCrosshair.GetComponent<Crosshair>().deactivate();
             frontCrosshair.GetComponent<Crosshair>().activate();
@@ -195,13 +238,12 @@ public class User : MonoBehaviour {
 
     public void resetRotation() {
 
-        body.transform.rotation = Quaternion.LookRotation(Vector3.forward);
-        topCamera.transform.position = body.transform.position + (body.transform.up * 1000);
-        topCamera.transform.rotation = body.transform.rotation;
-        topCamera.transform.Rotate(new Vector3(90, 0, 0));
+        currentBody.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+
+        topCamera.resetRotation();
 
         if (!FPMode)
-            topCrosshair.transform.rotation = body.transform.rotation;
+            topCrosshair.transform.rotation = currentBody.transform.rotation;
     }
 
     public void gizmoHover(GameObject gizmo) {
@@ -221,9 +263,9 @@ public class User : MonoBehaviour {
     }
 
 
-    public void followerHover(Follower follower) {
+    public void followerHover(Body follower) {
 
-        hoveringFollower = follower.gameObject;        
+        hoveringBody = follower.gameObject;        
         hovering = true;
 
         foreach (Crosshair crosshair in activeCrosshairs)
@@ -232,7 +274,7 @@ public class User : MonoBehaviour {
 
     public void followerHoverExit() {
 
-        hoveringFollower = null;        
+        hoveringBody = null;        
         hovering = false;
 
         foreach (Crosshair crosshair in activeCrosshairs)
@@ -243,11 +285,13 @@ public class User : MonoBehaviour {
 
         if (!grappleShot) {
 
-            GameObject grap = Instantiate(grapple, body.transform.position, Quaternion.identity) as GameObject;
+            var vec = (hoveringBody.transform.position - currentBody.transform.position).normalized;
+
+            GameObject grap = Instantiate(grapple, currentBody.transform.position + (vec * 16), Quaternion.identity) as GameObject;
             
-            grap.transform.LookAt(hoveringFollower.transform);
+            grap.transform.LookAt(hoveringBody.transform);
             grap.GetComponent<Rigidbody>().AddForce(grap.transform.forward * grappleShotForce, ForceMode.Impulse);
-                        
+            
             grappleShot = true;
         }
     }
@@ -257,11 +301,12 @@ public class User : MonoBehaviour {
         grappleShot = false;
     }
 
-    public void followerHit(GameObject follower) {
-        
-        followerList.Add(follower);
-        //Manager.currentCrosshair.selectorInactive();
-        follower.GetComponent<Follower>().activate();        
+    public void bodyHit(GameObject hitBody) {
+
+        switchBody(hitBody.GetComponent<Body>());
+        followerHoverExit();        
+     
         grappleDeath();        
     }
+
 }

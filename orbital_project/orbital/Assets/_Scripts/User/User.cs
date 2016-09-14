@@ -62,9 +62,9 @@ public class User : MonoBehaviour {
     void Update() {
 
         if (debug) {
-            Debug.DrawRay(body.transform.position, transform.forward * 1000, Color.blue);
-            Debug.DrawRay(body.transform.position, transform.up * 1000, Color.green);
-            Debug.DrawRay(body.transform.position, transform.right * 1000, Color.red);
+            Debug.DrawRay(body.transform.position, body.transform.forward * 1000, Color.blue);
+            Debug.DrawRay(body.transform.position, body.transform.up * 1000, Color.green);
+            Debug.DrawRay(body.transform.position, body.transform.right * 1000, Color.red);
         }
 
     }
@@ -76,7 +76,7 @@ public class User : MonoBehaviour {
         //  If it is, set that as the currentCamera, otherwise we user the Top camera as default
         bool overDisplay = false;
         var mousePos = Input.mousePosition;
-        mousePos.z = 96;
+        mousePos.z = 98;
         mousePos = Manager.worldUICamera.ScreenToWorldPoint(mousePos);
         Ray ray = new Ray(mousePos, Vector3.forward);
 
@@ -84,7 +84,7 @@ public class User : MonoBehaviour {
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 100.0f)) {
-
+            
             if (hit.collider.tag.Equals("CameraDisplay")) {
 
                 overDisplay = true;
@@ -95,7 +95,6 @@ public class User : MonoBehaviour {
             
             Manager.currentCamera = topCamera;            
         }
-        
 
         if (Input.GetMouseButton(0) && !hovering) {
 
@@ -104,7 +103,7 @@ public class User : MonoBehaviour {
             
             // Mouse is hovering over a display, so rotate us based on that ( For now just FP, would need to be adapted to support different cameras
             if (overDisplay) {
-
+                
                 var targetVector = (frontCrosshair.transform.position - body.transform.position).normalized;
                 var rotationTarget = Quaternion.LookRotation(targetVector);
 
@@ -112,9 +111,9 @@ public class User : MonoBehaviour {
             }
             // Normal Top down rotation
             else {
-                
+
                 rotationTowardsTarget = Quaternion.AngleAxis(Mathf.Atan2(topCrosshair.transform.position.z - body.transform.position.z, topCrosshair.transform.position.x - body.transform.position.x) * 180 / Mathf.PI - 90, -body.transform.up);
-                body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);                
+                body.transform.rotation = Quaternion.Slerp(body.transform.rotation, rotationTowardsTarget, Time.deltaTime * TDturnSpeed);                                
             }            
 
             bodyRigidbody.AddForce(body.transform.forward * moveSpeed);
@@ -165,9 +164,7 @@ public class User : MonoBehaviour {
             if (fpGizmo.activated)
                 fpGizmo.Toggle();
 
-            Manager.currentCamera = topCamera;
-
-            topCamera.transform.position = body.transform.position + (transform.up * 1000);
+            topCamera.transform.position = body.transform.position + (body.transform.up * 1000);
             topCamera.transform.rotation = body.transform.rotation;
             topCamera.transform.Rotate(new Vector3(90, 0, 0));
 

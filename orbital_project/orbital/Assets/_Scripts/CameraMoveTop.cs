@@ -6,33 +6,24 @@ using System.Collections.Generic;
 
 public class CameraMoveTop : MonoBehaviour {
 
-    public float dampTime = 0.15F;  
-    public GameObject userBody;
+    public float dampTime = 0.15F;      
 
     public Camera actualCamera;
 
     private Vector3 velocity = Vector3.zero;
 
-    void Start() {
-
-        userBody = Manager.user.currentBody.gameObject;
-
-        transform.position = userBody.transform.position + (userBody.transform.up * 1000);
-        transform.rotation = userBody.transform.rotation;
-    }
-
 
     void LateUpdate() {
 
-        var targetPos = userBody.transform.position + (userBody.transform.up * 1000);
+        var targetPos = Manager.user.currentBody.gameObject.transform.position + (Manager.user.currentBody.gameObject.transform.up * 1000);
 
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, dampTime);
     }
 
     public void resetRotation() {
 
-        //transform.position = userBody.transform.position + (userBody.transform.up * 1000);
-        transform.rotation = userBody.transform.rotation;
+        //transform.position = Manager.user.currentBody.gameObject.transform.position + (Manager.user.currentBody.gameObject.transform.up * 1000);
+        transform.rotation = Manager.user.currentBody.gameObject.transform.rotation;
  
     }
 

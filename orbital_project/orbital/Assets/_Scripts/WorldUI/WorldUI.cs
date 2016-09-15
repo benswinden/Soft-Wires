@@ -15,9 +15,11 @@ public class WorldUI : MonoBehaviour {
 
     GameObject currentGizmoHover;
 
+    public bool activated { get; set; }
 
     void Awake() {
 
+        activated = true;
         Manager.worldUI = this;
     }
 
@@ -112,5 +114,26 @@ public class WorldUI : MonoBehaviour {
     public void selectionHoverExit() {
         
         selector.SetActive(false);        
+    }
+
+
+    public void activate() {
+
+        if (!activated) {
+
+            Manager.worldUICamera.enabled = true;
+
+            activated = true;
+        }
+    }
+
+    public void deactivate() {
+
+        if (activated) {
+
+            Manager.worldUICamera.enabled = false;
+
+            activated = false;
+        }
     }
 }

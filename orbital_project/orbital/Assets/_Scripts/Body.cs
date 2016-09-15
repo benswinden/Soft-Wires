@@ -29,8 +29,7 @@ public class Body : MonoBehaviour {
     public TextMeshPro nameText;    
     public string followerName;
 
-    [Header("Containers")]
-    public Gizmo gizmo;
+    [Header("Containers")]    
     public GameObject meshToSpin;
     public LineRenderer lineRenderer;    
 

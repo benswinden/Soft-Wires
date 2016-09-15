@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class User : MonoBehaviour {
 
+    public bool startActivated;
+
     [Header("Variables")]
     public float TDturnSpeed = 1;
     public float FPturnSpeed = 1;
@@ -48,19 +50,39 @@ public class User : MonoBehaviour {
 
     public List<Crosshair> activeCrosshairs { get; set; }
 
-    
+
+    public bool activated { get; set; }
+
+
     void Awake() {
+
+        if (Manager.user)
+            Destroy(gameObject);
+
+        DontDestroyOnLoad(gameObject);
 
         Manager.user = this;
         Manager.currentCamera = topCamera.actualCamera;
 
-        activeCrosshairs = new List<Crosshair>();
+        activeCrosshairs = new List<Crosshair>();        
+    }
+
+    void Start() {
 
         // Check for our body
         foreach (Transform child in transform) {
 
             if (child.GetComponent<Body>())
                 switchBody(child.GetComponent<Body>());
+        }
+
+        if (startActivated) {
+            activated = false;
+            activate();
+        }
+        else {
+            activated = true;
+            deactivate();
         }
     }
 
@@ -187,14 +209,38 @@ public class User : MonoBehaviour {
             Manager.worldUI.addGizmo(giz, giz.slot);
         }
 
-        frontCamera.GetComponentInParent<CameraMoveFront>().userBody = currentBody.gameObject;
-        topCamera.GetComponentInParent<CameraMoveTop>().userBody = currentBody.gameObject;
-
         resetRotation();
     }
 
 
 
+    public void activate() {
+        
+        if (!activated) {
+
+            // Body
+            if (currentBody) currentBody.gameObject.SetActive(true);
+
+            // UI
+            if (Manager.worldUI) Manager.worldUI.activate();
+
+            activated = true;
+        }
+    }
+
+    public void deactivate() {
+
+        if (activated) {
+
+            // Body
+            if (currentBody) currentBody.gameObject.SetActive(false);
+
+            // UI
+            if (Manager.worldUI) Manager.worldUI.deactivate();
+
+            activated = false;
+        }
+    }
 
 
     public void toggleMode() {

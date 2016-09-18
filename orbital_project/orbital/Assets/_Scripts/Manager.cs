@@ -11,6 +11,7 @@ public class Manager : MonoBehaviour {
 
     public static Camera worldUICamera;
     public static WorldUI worldUI;
+    public static GizmoUI gizmoUI;
 
     public static Camera currentCamera;
 

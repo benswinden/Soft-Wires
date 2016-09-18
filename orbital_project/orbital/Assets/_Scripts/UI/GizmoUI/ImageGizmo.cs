@@ -96,8 +96,8 @@ public class ImageGizmo : MonoBehaviour {
 
         yield return new WaitForSeconds(0.2f);
 
-        GetComponent<Gizmo>().hoverExit();
-        Manager.worldUI.removeGizmo(GetComponent<Gizmo>());
+        GetComponent<UIButton>().hoverExit();
+        Manager.gizmoUI.removeGizmo(GetComponent<Gizmo>());
 
     }
 

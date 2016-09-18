@@ -29,6 +29,8 @@ public class Body : MonoBehaviour {
     public TextMeshPro nameText;    
     public string followerName;
 
+    public string description;
+
     [Header("Containers")]    
     public GameObject meshToSpin;
     public LineRenderer lineRenderer;    
@@ -57,16 +59,18 @@ public class Body : MonoBehaviour {
     void Awake() {
 
         lineRenderer.SetVertexCount(0);
-        
-
         rigidbodyComponent = GetComponent<Rigidbody>();
     }
     
     void Start() {
 
+        // Get a name
         var num = Random.Range(0, Manager.nameList.Count);
         followerName = (Manager.nameList[num]);
         Manager.nameList.RemoveAt(num);
+
+        // Get a description
+
 
         moveSpeed = maxMoveSpeed;        
     }
@@ -158,7 +162,7 @@ public class Body : MonoBehaviour {
 
             if (showName) displayName();
             hoverActive = true;
-            Manager.user.followerHover(this);
+            Manager.user.bodyHover(this);
         }
     }
 
@@ -166,7 +170,7 @@ public class Body : MonoBehaviour {
 
         clearName();
         hoverActive = false;
-        Manager.user.followerHoverExit();
+        Manager.user.bodyHoverExit();
     }
 
     public void activate() {

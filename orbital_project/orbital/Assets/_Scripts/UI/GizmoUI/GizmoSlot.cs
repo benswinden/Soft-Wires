@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class UISlot : MonoBehaviour {
+public class GizmoSlot : MonoBehaviour {
 
     public Gizmo gizmo { get; set; }
 
@@ -14,7 +14,7 @@ public class UISlot : MonoBehaviour {
 
             if (child.GetComponent<Gizmo>()) {
 
-                Manager.worldUI.addGizmo(child.GetComponent<Gizmo>(), this);
+                Manager.gizmoUI.addGizmo(child.GetComponent<Gizmo>(), this);
             }
         }
     }

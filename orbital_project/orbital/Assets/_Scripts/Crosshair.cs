@@ -27,6 +27,7 @@ public class Crosshair : MonoBehaviour {
     float minMoveDistance;
     new Rigidbody rigidbody;
     Vector3 lastMousePosition;
+    GameObject hoveringBody;
 
     bool selectorActivated;
 
@@ -103,7 +104,7 @@ public class Crosshair : MonoBehaviour {
         }
         else if (activated && selectorActivated) {
 
-            transform.position = hoveringFollower.transform.position;
+            transform.position = hoveringBody.transform.position;
         }
 
     }
@@ -138,26 +139,45 @@ public class Crosshair : MonoBehaviour {
         }
     }
 
-    GameObject hoveringFollower;
+    Vector3 startMousePos;
+    public void deactivateCursor() {
 
-    public void deactivateCursor() { 
+        var mousePos = Input.mousePosition;
+        mousePos.z = distanceFromCamera;
+        mousePos = attachedCamera.ScreenToWorldPoint(mousePos);
 
-        activated = false;        
+        startMousePos = mousePos;
+
+        StartCoroutine("wait");
+    }
+
+    IEnumerator wait() {
+
+        yield return new WaitForSeconds(0.15f);
+
+        activated = false;
         normalMesh.SetActive(false);
     }
 
-    public void reactivateCursor() {
+    public void reactivateCursor(GameObject DELETEME) {
 
         activated = true;
         normalMesh.SetActive(true);
+
+        Vector3 pos = Manager.worldUICamera.WorldToScreenPoint(DELETEME.transform.position);
+        pos.z = distanceFromCamera;
+        pos = attachedCamera.ScreenToWorldPoint(pos);
+
+        transform.position = pos;
+        //transform.position = startMousePos;
     }
 
-    public void selectorActive(GameObject follower) {
+    public void selectorActive(GameObject body) {
 
-        hoveringFollower = follower;
+        hoveringBody = body;
         rigidbody.velocity = Vector3.zero;
 
-        transform.position = follower.transform.position;
+        transform.position = body.transform.position;
         selectorActivated = true;
         normalMesh.SetActive(false);
         selectorMesh.SetActive(true);

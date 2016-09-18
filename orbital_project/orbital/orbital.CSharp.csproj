@@ -179,20 +179,23 @@
     <Compile Include="Assets\_Scripts\RotateMesh.cs" />
     <Compile Include="Assets\_Scripts\Selector.cs" />
     <Compile Include="Assets\_Scripts\Selfdestruct.cs" />
+    <Compile Include="Assets\_Scripts\UI\DataUI\DataButton.cs" />
+    <Compile Include="Assets\_Scripts\UI\DataUI\DataDisplayFrame.cs" />
+    <Compile Include="Assets\_Scripts\UI\DataUI\DataUI.cs" />
+    <Compile Include="Assets\_Scripts\UI\GizmoUI\CameraGizmo.cs" />
+    <Compile Include="Assets\_Scripts\UI\GizmoUI\CompassGizmo.cs" />
+    <Compile Include="Assets\_Scripts\UI\GizmoUI\Gizmo.cs" />
+    <Compile Include="Assets\_Scripts\UI\GizmoUI\GizmoSlot.cs" />
+    <Compile Include="Assets\_Scripts\UI\GizmoUI\GizmoUI.cs" />
+    <Compile Include="Assets\_Scripts\UI\GizmoUI\ImageGizmo.cs" />
+    <Compile Include="Assets\_Scripts\UI\GizmoUI\SoundGizmo.cs" />
+    <Compile Include="Assets\_Scripts\UI\GizmoUI\TuningGizmo.cs" />
+    <Compile Include="Assets\_Scripts\UI\InfoUI\InfoUI.cs" />
+    <Compile Include="Assets\_Scripts\UI\RandomNumbers.cs" />
+    <Compile Include="Assets\_Scripts\UI\UIButton.cs" />
+    <Compile Include="Assets\_Scripts\UI\WorldUI.cs" />
+    <Compile Include="Assets\_Scripts\UI\WorldUICamera.cs" />
     <Compile Include="Assets\_Scripts\User\User.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\CameraGizmo.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\CompassGizmo.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\Gizmo.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\ImageButton.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\ImageGizmo.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\ImageUI.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\RandomNumbers.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\SoundGizmo.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\TuningGizmo.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\UISlot.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\WorldImageHolder.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\WorldUI.cs" />
-    <Compile Include="Assets\_Scripts\WorldUI\WorldUICamera.cs" />
     <Compile Include="Assets\_Scripts\titleAnim.cs" />
   </ItemGroup>
   <ItemGroup>

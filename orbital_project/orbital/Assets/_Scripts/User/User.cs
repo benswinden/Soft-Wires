@@ -34,6 +34,7 @@ public class User : MonoBehaviour {
 
     bool hovering;
     GameObject hoveringBody;
+    UIButton hoveringUIButton;
 
     bool grappleShot;        
 
@@ -190,7 +191,7 @@ public class User : MonoBehaviour {
         currentBody = newBody;
 
         // Remove all gizmos
-        Manager.worldUI.removeAllGizmos();
+        Manager.gizmoUI.removeAllGizmos();
 
 
         // Add gizmos
@@ -206,7 +207,7 @@ public class User : MonoBehaviour {
 
         foreach (Gizmo giz in gizmoList) {
 
-            Manager.worldUI.addGizmo(giz, giz.slot);
+            Manager.gizmoUI.addGizmo(giz, giz.slot);
         }
 
         resetRotation();
@@ -292,33 +293,40 @@ public class User : MonoBehaviour {
             topCrosshair.transform.rotation = currentBody.transform.rotation;
     }
 
-    public void gizmoHover(GameObject gizmo) {
+    public void UIButtonHover(GameObject uiButton) {
 
+        // If we are already hovering over a gizmo, turn that one off first
+        if (hovering && hoveringUIButton != null) {
+
+            hoveringUIButton.deactivate();
+        }
+
+        hoveringUIButton = uiButton.GetComponent<UIButton>();
         hovering = true;
 
         foreach (Crosshair crosshair in activeCrosshairs)
-            crosshair.deactivateCursor();
+            crosshair.deactivateCursor();        
     }
 
-    public void gizmoHoverExit() {
+    public void UIButtonHoverExit(GameObject uiObject) {
 
         hovering = false;
 
         foreach (Crosshair crosshair in activeCrosshairs)
-            crosshair.reactivateCursor();
+            crosshair.reactivateCursor(uiObject);
     }
 
 
-    public void followerHover(Body follower) {
+    public void bodyHover(Body body) {
 
-        hoveringBody = follower.gameObject;        
+        hoveringBody = body.gameObject;        
         hovering = true;
 
         foreach (Crosshair crosshair in activeCrosshairs)
-            crosshair.selectorActive(follower.gameObject);
+            crosshair.selectorActive(body.gameObject);
     }
 
-    public void followerHoverExit() {
+    public void bodyHoverExit() {
 
         hoveringBody = null;        
         hovering = false;
@@ -350,7 +358,7 @@ public class User : MonoBehaviour {
     public void bodyHit(GameObject hitBody) {
 
         switchBody(hitBody.GetComponent<Body>());
-        followerHoverExit();        
+        bodyHoverExit();        
      
         grappleDeath();        
     }

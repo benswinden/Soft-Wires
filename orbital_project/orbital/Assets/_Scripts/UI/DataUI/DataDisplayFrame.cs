@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class WorldImageHolder : MonoBehaviour {
+public class DataDisplayFrame : MonoBehaviour {
 
 
     public LineRenderer lineRenderer;
@@ -13,16 +13,15 @@ public class WorldImageHolder : MonoBehaviour {
 
     public GameObject holder;
 
-    public ImageUI imageUI;
+    public DataUI dataUI;
 
-    ImageButton targetButton;
+    DataButton targetButton;
     
 
     public void startAnimation(int imageNum) {
-
-        targetButton = imageUI.imageButtons[imageNum];
-        targetButton.create();
-        targetButton.Toggle();
+        
+        targetButton = dataUI.dataButtons[imageNum];
+        targetButton.GetComponent<UIButton>().seek();        
 
         lineRenderer.SetVertexCount(2);
 

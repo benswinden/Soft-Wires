@@ -16,6 +16,10 @@ public class UIButton : MonoBehaviour {
     public Material matBlack;
     public Material matGreen;
 
+    [Space]
+
+    public bool debug;
+
 
     bool hidden;
 
@@ -35,11 +39,13 @@ public class UIButton : MonoBehaviour {
 
     void Update() {
 
-        if (!hidden && hoverActive) {
+        var mousePos = Input.mousePosition;
+        mousePos.z = Vector3.Distance(transform.position, Manager.worldUICamera.transform.position);
+        mousePos = Manager.worldUICamera.ScreenToWorldPoint(mousePos);
 
-            var mousePos = Input.mousePosition;
-            mousePos.z = Vector3.Distance(transform.position, Manager.worldUICamera.transform.position);
-            mousePos = Manager.worldUICamera.ScreenToWorldPoint(mousePos);
+        if (debug) Debug.Log("Activated: " + activated + "    Hidden: " + hidden + "    Hover Active: " + hoverActive + "    Start Mouse Pos: " + startMousePosition + "    Current Mouse Pos: " + mousePos + "    Diff: " + Vector3.Distance(startMousePosition, mousePos));
+
+        if (!hidden && hoverActive) {            
 
             if (Vector3.Distance(startMousePosition, mousePos) > Manager.worldUI.distanceToExitHover) {
 
@@ -58,23 +64,42 @@ public class UIButton : MonoBehaviour {
 
         if (!hidden) {
 
-            //  Store the mouse start position so we can check against that to see when we should stop hovering
-            var mousePos = Input.mousePosition;
-            mousePos.z = Vector3.Distance(transform.position, Manager.worldUICamera.transform.position);
-            mousePos = Manager.worldUICamera.ScreenToWorldPoint(mousePos);
-
-            startMousePosition = mousePos;
-            hoverActive = true;
-
-            // Tell the worldUI, it handles the cursor and telling the user we are hovering
-            Manager.worldUI.selectionHover(gameObject, selector);
+            hoverEnter();
         }
+    }
+
+    void hoverEnter() {        
+
+        //  Store the mouse start position so we can check against that to see when we should stop hovering
+        var mousePos = Input.mousePosition;
+        mousePos.z = Vector3.Distance(transform.position, Manager.worldUICamera.transform.position);
+        mousePos = Manager.worldUICamera.ScreenToWorldPoint(mousePos);
+
+        startMousePosition = mousePos;
+        hoverActive = true;
+            
+        Manager.user.UIButtonHover(this);
+
+        StartCoroutine("waitToActivateSelector");        
+    }
+
+    IEnumerator waitToActivateSelector() {
+
+        yield return new WaitForSeconds(0.15f);
+
+        selector.SetActive(true);
+        selector.transform.position = transform.position;
     }
 
     public void hoverExit() {
 
-        Manager.worldUI.selectionHoverExit(selector);
-        hoverActive = false;        
+        StopCoroutine("waitToActivateSelector");
+
+        hoverActive = false;
+
+        Manager.user.UIButtonHoverExit(this);
+
+        selector.SetActive(false);    
     }
 
     // We are hovering, and want to stop hovering without using hoverExit

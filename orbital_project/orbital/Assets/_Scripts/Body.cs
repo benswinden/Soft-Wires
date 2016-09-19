@@ -126,7 +126,7 @@ public class Body : MonoBehaviour {
                 }
 
                 if (canMove && thrusting) {
-                    rigidbodyComponent.drag = moveDrag;
+                    rigidbodyComponent.drag = 22;
 
 
                     var targetVector = (target.transform.position - transform.position).normalized;

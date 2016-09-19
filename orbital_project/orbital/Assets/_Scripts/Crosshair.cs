@@ -148,10 +148,10 @@ public class Crosshair : MonoBehaviour {
 
         startMousePos = mousePos;
 
-        StartCoroutine("wait");
+        StartCoroutine("waitToDeactivateCursor");
     }
 
-    IEnumerator wait() {
+    IEnumerator waitToDeactivateCursor() {
 
         yield return new WaitForSeconds(0.15f);
 
@@ -159,17 +159,18 @@ public class Crosshair : MonoBehaviour {
         normalMesh.SetActive(false);
     }
 
-    public void reactivateCursor(GameObject DELETEME) {
+    public void reactivateCursor(UIButton uiButton) {
+
+        StopCoroutine("waitToDeactivateCursor");
 
         activated = true;
         normalMesh.SetActive(true);
 
-        Vector3 pos = Manager.worldUICamera.WorldToScreenPoint(DELETEME.transform.position);
+        Vector3 pos = Manager.worldUICamera.WorldToScreenPoint(uiButton.transform.position);
         pos.z = distanceFromCamera;
         pos = attachedCamera.ScreenToWorldPoint(pos);
 
-        transform.position = pos;
-        //transform.position = startMousePos;
+        transform.position = pos;        
     }
 
     public void selectorActive(GameObject body) {

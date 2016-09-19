@@ -108,7 +108,7 @@ public class User : MonoBehaviour {
         mousePos = Manager.worldUICamera.ScreenToWorldPoint(mousePos);
         Ray ray = new Ray(mousePos, Vector3.forward);
 
-        Debug.DrawRay(mousePos, Vector3.forward * 10, Color.magenta, 1);
+        if (debug) Debug.DrawRay(mousePos, Vector3.forward * 10, Color.magenta, 1);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 100.0f)) {
@@ -243,7 +243,7 @@ public class User : MonoBehaviour {
         }
     }
 
-
+    // Activating and Deactivating First Person Mode, needs refactoring
     public void toggleMode() {
 
 
@@ -293,22 +293,22 @@ public class User : MonoBehaviour {
             topCrosshair.transform.rotation = currentBody.transform.rotation;
     }
 
-    public void UIButtonHover(GameObject uiButton) {
+    public void UIButtonHover(UIButton uiButton) {
 
         // If we are already hovering over a gizmo, turn that one off first
-        if (hovering && hoveringUIButton != null) {
+        if (hovering && hoveringUIButton != null && hoveringUIButton != uiButton) {
 
             hoveringUIButton.deactivate();
         }
 
-        hoveringUIButton = uiButton.GetComponent<UIButton>();
+        hoveringUIButton = uiButton;
         hovering = true;
 
         foreach (Crosshair crosshair in activeCrosshairs)
             crosshair.deactivateCursor();        
     }
 
-    public void UIButtonHoverExit(GameObject uiObject) {
+    public void UIButtonHoverExit(UIButton uiObject) {
 
         hovering = false;
 

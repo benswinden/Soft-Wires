@@ -9,13 +9,15 @@ public class User : MonoBehaviour {
     public bool startActivated;
 
     [Header("Variables")]
-    public float TDturnSpeed = 1;
-    public float FPturnSpeed = 1;
-    public float moveSpeed = 1;
-
+    public float topTurnSpeed = 3;
+    public float frontTurnSpeed = 3;
+    [Space]
+    public float topMoveSpeed = 1;
+    public float frontMoveSpeed = 1;
+    [Space]
     public float moveDrag = 4;
-    public float driftDrag = 1;    
-
+    public float driftDrag = 1;
+    [Space]
     public float grappleShotForce = 1000;
 
 
@@ -135,7 +137,9 @@ public class User : MonoBehaviour {
                 var targetVector = (frontCrosshair.transform.position - currentBody.transform.position).normalized;
                 var rotationTarget = Quaternion.LookRotation(targetVector);
 
-                currentBody.transform.rotation = Quaternion.Slerp(currentBody.transform.rotation, rotationTarget, Time.deltaTime * FPturnSpeed);
+                currentBody.transform.rotation = Quaternion.Slerp(currentBody.transform.rotation, rotationTarget, Time.deltaTime * frontTurnSpeed);
+
+                currentBody.GetComponent<Rigidbody>().AddForce(currentBody.transform.forward * frontMoveSpeed);
             }
             // Normal Top down rotation
             else {
@@ -146,10 +150,10 @@ public class User : MonoBehaviour {
                 var newRotation = Quaternion.LookRotation(topCrosshair.transform.position - currentBody.transform.position, currentBody.transform.up);
                 //newRotation.x = 0.0f;
                 //newRotation.z = 0.0f;
-                currentBody.transform.rotation = Quaternion.Slerp(currentBody.transform.rotation, newRotation, Time.deltaTime * TDturnSpeed);
-            }
+                currentBody.transform.rotation = Quaternion.Slerp(currentBody.transform.rotation, newRotation, Time.deltaTime * topTurnSpeed);
 
-            currentBody.GetComponent<Rigidbody>().AddForce(currentBody.transform.forward * moveSpeed);
+                currentBody.GetComponent<Rigidbody>().AddForce(currentBody.transform.forward * topMoveSpeed);
+            }            
 
         }
         else if (Input.GetMouseButtonDown(0) && hovering) {
